@@ -137,7 +137,15 @@ body.clean #hud{opacity:0} body.clean #hud:hover{opacity:1}
 html,body{background:#cfc5b6}
 #world{background:none!important;box-shadow:none!important;width:7600px;height:3600px}
 #world::before{content:"";position:absolute;left:-7000px;top:-6000px;width:22000px;height:16000px;z-index:-3;
-  background-color:#d9cdbb;
+  background-color:#8a4a32;
+  background-image:
+    radial-gradient(ellipse 22% 26% at 30% 46%, rgba(255,235,205,.18), rgba(255,235,205,0) 70%),
+    linear-gradient(to bottom, rgba(25,12,6,.45), rgba(25,12,6,0) 30%, rgba(25,12,6,0) 62%, rgba(25,12,6,.38) 66.5%),
+    radial-gradient(ellipse 34% 30% at 49% 48%, rgba(0,0,0,0) 45%, rgba(20,10,5,.42)),
+    url("tex/bricks.jpg");
+  background-size:auto,auto,auto,5200px 5200px;
+  background-position:0 0,0 0,0 0,1200px 330px}
+#world::after{content:none;
   background-image:
     radial-gradient(ellipse 60% 45% at 52% 38%, rgba(255,250,240,.55), rgba(255,250,240,0) 70%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0045' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .47 0 0 0 0 .38 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='900' height='900' filter='url(%23w)'/%3E%3C/svg%3E"),
@@ -905,6 +913,7 @@ html,body{background:#d6c9b6}
     <li>Fenstergriff Tensolock F 04 — Sandra Hässig, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Fenstergriff_Tensolock_F_04.jpg">source</a></li>
   </ul>
   <p><b>Drawings</b>: schematic diagrams drawn for this presentation (not to scale).</p>
+  <p><b>Brick wall texture</b>: “Bricks101” from <a href="https://ambientcg.com/view?id=Bricks101">ambientCG</a>, CC0.</p>
   <p><b>Reading / sources</b>:</p>
   <ul>
     <li>Liniar — multi-chambered profiles: <a href="https://www.liniar.co.uk/articles/multi-chambered-profiles-the-science-bit">liniar.co.uk</a></li>
