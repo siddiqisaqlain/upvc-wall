@@ -60,7 +60,7 @@ body.zoomed #gobo, body.zoomed #cone{opacity:0}
 /* zones (hidden topics) */
 .zone{position:absolute;z-index:4;cursor:pointer;transition:opacity .6s}
 .zone svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.zone rect{fill:rgba(255,255,255,0);stroke:#2b3f73;stroke-width:9;stroke-dasharray:46 26;stroke-linecap:round;opacity:.5;filter:url(#rough);transition:opacity .3s,fill .3s}
+.zone rect{fill:rgba(255,255,255,0);stroke:#2b3f73;stroke-width:9;stroke-dasharray:46 26;stroke-linecap:round;opacity:.5;transition:opacity .3s,fill .3s}
 .zone:hover rect{opacity:.95;fill:rgba(255,236,150,.12)}
 .zone .zt{position:absolute;left:0;right:0;top:50%;transform:translateY(-55%);text-align:center;font-family:'Ink Free','Segoe Print',var(--hand);color:#2b3f73}
 .zone .zt b{display:block;font-size:240px;line-height:1;color:#b3121b;opacity:.85}
@@ -78,7 +78,7 @@ body.zoomed #gobo, body.zoomed #cone{opacity:0}
 .cluster.shown{pointer-events:auto}
 .cluster.shown .item{opacity:1;transform:rotate(var(--r,0deg))}
 .cluster.shown .item:hover{box-shadow:4px 18px 30px rgba(40,40,60,.3)}
-#strings path{stroke:#2b3f73!important;stroke-width:10!important;opacity:.75;filter:url(#rough)!important;transition:stroke-dashoffset 1.2s ease-in-out!important}
+#strings path{stroke:#2b3f73!important;stroke-width:10!important;opacity:.75;filter:none!important;stroke-linejoin:round;transition:stroke-dashoffset 1.2s ease-in-out!important}
 #strings path.hidden{stroke-dashoffset:var(--len)!important}
 body.still #strings path,body.still #pins .pin{transition:none!important}
 #pins .pin{opacity:0;transform:translateY(-14px);transition:opacity .3s ease var(--d,0s),transform .45s cubic-bezier(.2,1.6,.4,1) var(--d,0s)}
@@ -123,13 +123,13 @@ const basket = `<svg class="scene" id="basket" viewBox="0 0 1100 1750">
   <g><rect x="450" y="200" width="70" height="1150" rx="35" fill="#2b3f73" transform="rotate(-3 485 760)"/></g>
   <path d="M180 1000 H920 L860 1720 H240 Z" fill="url(#weave)"/><rect x="160" y="980" width="780" height="60" rx="30" fill="#a87c43"/></svg>`;
 let planks='';const VP=10800;const cols=['#b48557','#a67a4d','#bf8f60','#aa7d50','#b88a5a','#9f7347'];
-for(let i=-70;i<70;i++){const t1=VP+i*95,t2=VP+(i+1)*95,b1=VP+i*420,b2=VP+(i+1)*420;planks+=`<polygon points="${t1},0 ${t2},0 ${b2},1700 ${b1},1700" fill="${cols[(i*7+100)%cols.length]}" stroke="rgba(60,35,15,.45)" stroke-width="3"/>`;}
+for(let i=-70;i<70;i++){const t1=VP+i*95,t2=VP+(i+1)*95,b1=VP+i*420,b2=VP+(i+1)*420;planks+=`<polygon points="${t1},0 ${t2},0 ${b2},2400 ${b1},2400" fill="${cols[(i*7+100)%cols.length]}" stroke="rgba(60,35,15,.45)" stroke-width="3"/>`;}
 for(let r=0;r<9;r++){const y=Math.round(1700*Math.pow(r/9,1.6));planks+=`<line x1="0" y1="${y}" x2="22000" y2="${y}" stroke="rgba(60,35,15,.0)" />`}
-const floor=`<svg class="scene" id="floor" viewBox="0 0 22000 1700" preserveAspectRatio="none" style="left:-7000px;top:4560px;width:22000px;height:1700px;z-index:-2">
+const floor=`<svg class="scene" id="floor" viewBox="0 0 22000 2400" preserveAspectRatio="none" style="left:-7000px;top:4560px;width:22000px;height:2400px;z-index:-2">
 <defs><linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2210" stop-opacity=".55"/><stop offset=".35" stop-color="#3a2210" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient>
 <radialGradient id="sheen" cx=".3" cy=".25" r=".35"><stop offset="0" stop-color="#ffe9c6" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9c6" stop-opacity="0"/></radialGradient>
 <filter id="grain" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency=".002 .06" numOctaves="3" seed="5"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .1 0 0 0 0 .03 0 0 0 .45 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
-${planks}<rect width="22000" height="1700" filter="url(#grain)" fill="#000"/><rect width="22000" height="1700" fill="url(#fl)"/><rect width="22000" height="1700" fill="url(#sheen)"/></svg>`;
+${planks}<rect width="22000" height="2400" filter="url(#grain)" fill="#000"/><rect width="22000" height="2400" fill="url(#fl)"/><rect width="22000" height="2400" fill="url(#sheen)"/></svg>`;
 const gobo = `<div class="scene" id="gobo">
   <div style="left:0;top:0;width:2650px;height:3600px"></div><div style="left:2950px;top:0;width:2650px;height:3600px"></div>
   <div style="left:0;top:3900px;width:2650px;height:3700px"></div><div style="left:2950px;top:3900px;width:2650px;height:3700px"></div></div>`;
@@ -185,7 +185,8 @@ function buildMarks(){
       const ax=p2[0]-p1[0],ay=p2[1]-p1[1],L=Math.hypot(ax,ay);
       const mx=(p1[0]+p2[0])/2-ay*0.12,my=(p1[1]+p2[1])/2+ax*0.12;
       const k=(L-260)/L;const end=[p1[0]+ax*k,p1[1]+ay*k];
-      const p=mk('path',{d:\`M\${p1[0]},\${p1[1]} Q\${mx},\${my} \${end[0]},\${end[1]}\`},svg);
+      let d='';for(let i=0;i<=28;i++){const t=i/28,u=1-t;const x=u*u*p1[0]+2*u*t*mx+t*t*end[0],y=u*u*p1[1]+2*u*t*my+t*t*end[1];const w=(t>0.05&&t<0.95)?Math.sin(i*1.7+L)*7:0;d+=(i?'L':'M')+(x+w).toFixed(1)+','+(y-w).toFixed(1);}
+      const p=mk('path',{d},svg);
       const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.setProperty('--len',len);p.classList.add('hidden');arrows.set(c,p);}
     const cols=['#d62828','#2b3f73','#f2b705','#1a1a1a','#2a9d8f'];
     items.forEach((it,i)=>{const b=itemBox(it);const g=mk('g',{class:'pin'},pinsvg);g.style.setProperty('--d',(i*0.22+0.25)+'s');
@@ -298,5 +299,22 @@ ${js}
 </body>
 </html>
 `;
-fs.writeFileSync(new URL('../index.html', import.meta.url), html);
+// ---- scene bake page: only the room, fixed camera ----
+const S={x:-4000,y:-2600,w:15000,h:9000,k:0.42};
+const bake = html.replace('</style>',`
+#world{transform:translate(${-S.x*S.k}px,${-S.y*S.k}px) scale(${S.k})!important;transition:none!important}
+.cluster,.zone,#hud,#hint,#vignette,#bar,#strings,#pins,#credits{display:none!important}
+</style>`).replace(/<script>[\s\S]*<\/script>/,'');
+fs.writeFileSync(new URL('./scene.html', import.meta.url), bake);
+// ---- light page: the room is one baked image ----
+const light = html
+  .replace('</style>',`
+#world::before{display:none!important}
+html,body{background:#d6c9b6}
+#board{background:transparent!important;box-shadow:none!important}
+#board .face,#board .brand,.scene,#label{display:none!important}
+#sceneimg{position:absolute;left:${S.x}px;top:${S.y}px;width:${S.w}px;height:${S.h}px;z-index:-2;pointer-events:none;user-select:none}
+</style>`)
+  .replace('<div id="board">','<img id="sceneimg" src="img/wall.jpg" alt="" draggable="false"><div id="board">');
+fs.writeFileSync(new URL('../index.html', import.meta.url), light);
 console.log('built index.html', html.length, 'bytes');
