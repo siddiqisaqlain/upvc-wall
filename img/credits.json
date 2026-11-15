@@ -1,0 +1,100 @@
+{
+ "sash": {
+  "file": "img/sash.jpg",
+  "title": "File:UPVC Sash Window.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:UPVC_Sash_Window.jpg",
+  "license": "CC BY 4.0",
+  "artist": "Durajoin"
+ },
+ "india": {
+  "file": "img/india.jpg",
+  "title": "File:Windows of Pondicherry - Orange wall, UPVC window and Golden grill.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Windows_of_Pondicherry_-_Orange_wall,_UPVC_window_and_Golden_grill.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "iMahesh"
+ },
+ "tt-closed": {
+  "file": "img/tt-closed.jpg",
+  "title": "File:Hotel Terminus - closed tilt and turn window -Jernbanebakken, Bergen, Norway 2017-10-25.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Hotel_Terminus_-_closed_tilt_and_turn_window_-Jernbanebakken,_Bergen,_Norway_2017-10-25.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Wolfmann"
+ },
+ "tt-open": {
+  "file": "img/tt-open.jpg",
+  "title": "File:Hotel Terminus - open tilt and turn windows - afternoon golden hour light - Jernbanebakken, Bergen, Norway 2017-10-23 j.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Hotel_Terminus_-_open_tilt_and_turn_windows_-_afternoon_golden_hour_light_-_Jernbanebakken,_Bergen,_Norway_2017-10-23_j.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Wolfmann"
+ },
+ "casement": {
+  "file": "img/casement.jpg",
+  "title": "File:Modern Casement Window 01.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Modern_Casement_Window_01.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Stilfehler"
+ },
+ "espag": {
+  "file": "img/espag.jpg",
+  "title": "File:Espagnolette.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Espagnolette.JPG",
+  "license": "CC BY-SA 3.0",
+  "artist": "Nerijp"
+ },
+ "diderot": {
+  "file": "img/diderot.jpg",
+  "title": "File:Espagnolette (Diderot, Encyclopedie, Tafelbd.IX, 1771, Tf. XXXIV).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Espagnolette_(Diderot,_Encyclopedie,_Tafelbd.IX,_1771,_Tf._XXXIV).jpg",
+  "license": "Public domain",
+  "artist": "Diderot, D'Alembert und Jaucourt (Lexikonherausgeber, 1751-1772)."
+ },
+ "handle": {
+  "file": "img/handle.jpg",
+  "title": "File:Fenstergriff Tensolock F 04.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Fenstergriff_Tensolock_F_04.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Sandra Hässig"
+ },
+ "liftslide": {
+  "file": "img/liftslide.jpg",
+  "title": "File:Motorische-Hebeschiebetür.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Motorische-Hebeschiebet%C3%BCr.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Gretsch-Unitas Content-Marketing"
+ },
+ "beschlag": {
+  "file": "img/beschlag.jpg",
+  "title": "File:Fensterbeschlag-Imbach.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Fensterbeschlag-Imbach.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Plutho"
+ },
+ "timber": {
+  "file": "img/timber.jpg",
+  "title": "File:EURO 68 wooden window profile with insulated glazing 01.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:EURO_68_wooden_window_profile_with_insulated_glazing_01.JPG",
+  "license": "CC BY-SA 3.0",
+  "artist": "Kozuch"
+ },
+ "dh": {
+  "file": "img/dh.jpg",
+  "title": "File:Double hung window.jpeg",
+  "page": "https://commons.wikimedia.org/wiki/File:Double_hung_window.jpeg",
+  "license": "CC0",
+  "artist": "Tucker T"
+ },
+ "balancer": {
+  "file": "img/balancer.jpg",
+  "title": "File:Spiral Balancer 001.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Spiral_Balancer_001.JPG",
+  "license": "CC0",
+  "artist": "Tucker T"
+ },
+ "dgu": {
+  "file": "img/dgu.jpg",
+  "title": "File:Будова Склопакета.png",
+  "page": "https://commons.wikimedia.org/wiki/File:%D0%91%D1%83%D0%B4%D0%BE%D0%B2%D0%B0_%D0%A1%D0%BA%D0%BB%D0%BE%D0%BF%D0%B0%D0%BA%D0%B5%D1%82%D0%B0.png",
+  "license": "CC BY-SA 4.0",
+  "artist": "Usik64"
+ }
+}

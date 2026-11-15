@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>uPVC Case Wall</title>
+<style>
+:root{
+  --cork:#b07d4f; --ink:#1f2a44; --red:#b3121b; --paper:#fbf8f1; --note:#ffe36e; --note2:#ffd1dc; --note3:#c9f2c7;
+  --hand:'Segoe Print','Ink Free','Bradley Hand','Comic Sans MS',cursive;
+  --type:'Courier New',Courier,monospace;
+  --body:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#2b1d12;font-family:var(--body);color:var(--ink)}
+#viewport{position:fixed;inset:0;overflow:hidden;cursor:default}
+#world{position:absolute;left:0;top:0;width:7600px;height:3600px;transform-origin:0 0;
+  transition:transform 1.25s cubic-bezier(.65,0,.3,1);
+  background-color:var(--cork);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .15 0 0 0 0 .05 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .75 0 0 0 0 .5 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+#world::before{content:"";position:absolute;inset:-2500px;background:inherit;z-index:-1}
+.cluster{position:absolute}
+.item{position:absolute;transform:rotate(var(--r,0deg));transition:opacity .8s, filter .8s, box-shadow .4s;
+  box-shadow:3px 6px 14px rgba(30,15,0,.45);cursor:zoom-in}
+.item:hover{box-shadow:5px 10px 24px rgba(30,15,0,.6)}
+.future .item{opacity:.28;filter:grayscale(.8) blur(1.2px)}
+.current .item{opacity:1}
+
+/* heading tabs */
+.head{background:#1f2a44;color:#fff;padding:18px 26px 16px;font-family:var(--type);letter-spacing:.06em}
+.head .no{color:#ffcf4a;font-size:22px;display:block}
+.head h2{margin:2px 0 0;font-size:38px;line-height:1.1;text-transform:uppercase}
+.head p{margin:8px 0 0;font-family:var(--hand);font-size:19px;color:#cfd8ee;letter-spacing:0}
+
+/* index card */
+.card{background:var(--paper);padding:22px 24px 20px;
+  background-image:linear-gradient(transparent 46px,#e8a3a3 46px,#e8a3a3 48px,transparent 48px),
+  repeating-linear-gradient(transparent 0 33px,#cfe0ef 33px 34px);background-position:0 0,0 14px}
+.card h3{margin:0 0 14px;font-family:var(--type);font-size:23px;text-transform:uppercase;letter-spacing:.04em;color:var(--red);line-height:24px}
+.card p,.card li{font-size:19px;line-height:28px;margin:0 0 6px}
+.card ul,.card ol{margin:0;padding-left:22px}
+.card b{color:#000}
+.card .src{font-size:13px;color:#667;margin-top:8px;line-height:17px}
+
+/* sticky note */
+.note{background:var(--note);padding:26px 22px 22px;font-family:var(--hand);font-size:26px;line-height:1.25;text-align:center;
+  box-shadow:2px 8px 12px rgba(30,15,0,.4)}
+.note.pink{background:var(--note2)} .note.green{background:var(--note3)}
+.note small{display:block;font-size:17px;margin-top:8px;opacity:.75}
+
+/* polaroid */
+.photo{background:#fff;padding:14px 14px 10px;margin:0}
+.photo img{display:block;width:100%;height:auto}
+.photo figcaption{font-family:var(--hand);font-size:19px;line-height:1.3;padding:10px 4px 2px;color:#222}
+.photo figcaption small{display:block;font-family:var(--body);font-size:11.5px;color:#888;margin-top:5px;line-height:1.3}
+
+/* drafting sheet */
+.sheet{background:#fdfdfb;padding:18px 20px 16px;
+  background-image:linear-gradient(#e3ecf5 1px,transparent 1px),linear-gradient(90deg,#e3ecf5 1px,transparent 1px);
+  background-size:20px 20px;border:1px solid #c8d3df}
+.sheet h3{margin:0 0 6px;font-family:var(--type);font-size:21px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink)}
+.sheet .sub{font-family:var(--hand);font-size:17px;color:#555;margin:0 0 8px}
+.sheet svg{display:block;width:100%;height:auto}
+.sheet .titleblock{display:flex;justify-content:space-between;border-top:2px solid var(--ink);margin-top:8px;padding-top:5px;font-family:var(--type);font-size:12px;color:#445}
+svg text{font-family:'Segoe UI',Arial,sans-serif}
+.lbl{font-size:15px;fill:#1f2a44}
+.lblb{font-size:15px;fill:#b3121b;font-weight:700}
+.num{font-size:15px;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.hatch{fill:url(#hatch)}
+
+/* tape strip */
+.tape::before{content:"";position:absolute;top:-16px;left:50%;width:120px;height:32px;margin-left:-60px;
+  background:rgba(240,235,200,.75);transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+
+/* title card */
+.title{background:#f4efe2;padding:40px 46px 34px;border:3px double #7a1b1b;text-align:center}
+.title .stamp{display:inline-block;border:4px solid var(--red);color:var(--red);font-family:var(--type);font-weight:700;
+  font-size:24px;padding:4px 16px;transform:rotate(-4deg);letter-spacing:.2em;opacity:.85}
+.title h1{font-family:var(--type);font-size:72px;line-height:1.02;margin:18px 0 10px;letter-spacing:.02em}
+.title h1 span{color:var(--red)}
+.title p{font-family:var(--hand);font-size:26px;margin:6px 0}
+.title .meta{font-family:var(--type);font-size:18px;color:#555;margin-top:18px;border-top:1px dashed #999;padding-top:12px}
+
+table.cmp{border-collapse:collapse;width:100%;font-size:18px}
+table.cmp th,table.cmp td{border:1px solid #9fb2c6;padding:7px 9px;text-align:left;vertical-align:top;background:rgba(255,255,255,.7)}
+table.cmp th{background:#1f2a44;color:#fff;font-family:var(--type);font-size:17px;letter-spacing:.04em}
+table.cmp td:first-child{font-weight:700;background:#eef3f8}
+.win{color:#1a7f37;font-weight:700}
+
+.flow{display:flex;flex-wrap:wrap;gap:10px 4px;align-items:center;margin-top:6px}
+.flow span{background:#fff;border:2px solid var(--ink);padding:6px 10px;font-size:16px;font-weight:600}
+.flow i{font-style:normal;color:var(--red);font-weight:700;font-size:20px}
+
+/* strings & pins */
+#strings,#pins{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+#pins{z-index:3}
+#pins .pin{transition:opacity .8s}
+#strings path{fill:none;stroke:#a5141c;stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(2px 5px 2px rgba(0,0,0,.35));
+  transition:stroke-dashoffset 1.4s ease-in-out .55s}
+#strings path.thin{stroke-width:2.2;stroke:#6b0f14}
+#strings path.hidden{stroke-dashoffset:var(--len)!important}
+
+/* multipoint animation */
+.mpl .rod{animation:none}
+.current .mpl .rod,.play .mpl .rod{animation:rod 5s ease-in-out infinite}
+.current .mpl .hdl,.play .mpl .hdl{animation:hdl 5s ease-in-out infinite}
+@keyframes rod{0%,15%{transform:translateY(0)}35%,75%{transform:translateY(26px)}95%,100%{transform:translateY(0)}}
+@keyframes hdl{0%,15%{transform:rotate(0deg)}35%,75%{transform:rotate(90deg)}95%,100%{transform:rotate(0deg)}}
+.mpl .hdl{transform-origin:200px 280px;transform-box:view-box}
+.mpl .state{font-family:var(--type)}
+
+/* HUD */
+#hud{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:18px;padding:10px 18px;
+  background:linear-gradient(transparent,rgba(10,6,2,.85));color:#f3e9d8;font-family:var(--type);font-size:16px;z-index:5;
+  transition:opacity .4s}
+#hud .t{font-size:22px;font-weight:700;letter-spacing:.04em}
+#hud .k{margin-left:auto;opacity:.7;font-size:14px}
+#hud button{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);font:inherit;padding:6px 12px;cursor:pointer}
+#hud button:hover{background:rgba(255,255,255,.25)}
+#bar{position:fixed;left:0;top:0;height:4px;background:var(--red);z-index:6;transition:width .8s}
+body.still *{transition:none!important}
+body.clean #hud{opacity:0} body.clean #hud:hover{opacity:1}
+
+#credits{position:fixed;inset:0;background:rgba(10,6,2,.82);display:none;z-index:10;overflow:auto;padding:40px 16px}
+#credits.on{display:block}
+#credits .in{max-width:900px;margin:0 auto;background:var(--paper);padding:30px 34px;font-size:15px;line-height:1.5}
+#credits h2{font-family:var(--type);margin-top:0}
+#credits a{color:#1d4f91;word-break:break-all}
+#credits li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="viewport">
+<div id="world">
+
+<!-- shared svg defs -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="8" height="8" fill="#d9d9d9"/><line x1="0" y1="0" x2="0" y2="8" stroke="#666" stroke-width="2"/>
+    </pattern>
+    <pattern id="brick" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="16" height="16" fill="#f1d9c4"/><line x1="0" y1="0" x2="0" y2="16" stroke="#b07a55" stroke-width="2"/>
+    </pattern>
+    <pattern id="foam" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#ffe08a"/><circle cx="3" cy="3" r="1.6" fill="#e0b740"/><circle cx="8" cy="7" r="1.2" fill="#e0b740"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b3121b"/></marker>
+    <marker id="arrb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f6fb5"/></marker>
+    <marker id="arrk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2a44"/></marker>
+  </defs>
+</svg>
+
+<svg id="strings" width="7600" height="3600"></svg>
+
+<!-- ================= HERO (step 1) ================= -->
+<div class="cluster" data-step="1" data-name="The case" style="left:2000px;top:1300px">
+  <div class="item title head-anchor" id="title" style="left:1180px;top:110px;width:1320px;--r:-.6deg">
+    <div class="stamp">CASE FILE · NO. 09</div>
+    <h1><span>uPVC</span> WINDOWS<br>&amp; DOORS</h1>
+    <p>profiles · glass · hardware · types · installation</p>
+    <p>“A window is a machine in a hole in the wall.”</p>
+    <div class="meta">Architecture Studio — Building Materials &amp; Construction · Presented by ______________</div>
+  </div>
+
+  <div class="item sheet" style="left:100px;top:40px;width:860px;--r:1deg">
+    <h3>Anatomy of a uPVC window</h3>
+    <p class="sub">elevation, seen from inside — every part has a job</p>
+    <svg viewBox="0 0 640 600">
+      <!-- frame -->
+      <rect x="60" y="20" width="520" height="520" fill="#fff" stroke="#1f2a44" stroke-width="6"/>
+      <rect x="80" y="40" width="480" height="480" fill="none" stroke="#1f2a44" stroke-width="2"/>
+      <!-- mullion -->
+      <rect x="300" y="40" width="40" height="480" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <!-- fixed light glass -->
+      <rect x="96" y="56" width="188" height="448" fill="#dcecf7" stroke="#1f2a44"/>
+      <text x="190" y="290" text-anchor="middle" class="lbl" style="font-size:20px;opacity:.6">FIXED</text>
+      <!-- sash -->
+      <rect x="350" y="50" width="200" height="460" fill="#fff" stroke="#1f2a44" stroke-width="4"/>
+      <rect x="374" y="74" width="152" height="412" fill="#dcecf7" stroke="#1f2a44"/>
+      <!-- opening symbol tilt & turn -->
+      <path d="M374 74 L526 280 L374 486" fill="none" stroke="#1f2a44" stroke-dasharray="8 6"/>
+      <path d="M374 74 L450 486 L526 74" fill="none" stroke="#1f2a44" stroke-dasharray="3 5" opacity=".6"/>
+      <!-- handle -->
+      <rect x="356" y="262" width="14" height="40" rx="4" fill="#1f2a44"/>
+      <rect x="360" y="296" width="8" height="58" rx="4" fill="#1f2a44"/>
+      <!-- hinges -->
+      <rect x="546" y="80" width="12" height="34" fill="#888"/><rect x="546" y="470" width="12" height="34" fill="#888"/>
+      <!-- locking points -->
+      <g fill="#b3121b"><circle cx="352" cy="130" r="6"/><circle cx="352" cy="420" r="6"/><circle cx="450" cy="54" r="6"/><circle cx="450" cy="506" r="6"/></g>
+      <!-- drain slots -->
+      <g fill="#1f6fb5"><rect x="130" y="527" width="34" height="6" rx="3"/><rect x="430" y="527" width="34" height="6" rx="3"/></g>
+      <!-- callouts -->
+      <g stroke="#b3121b" stroke-width="1.6">
+        <line x1="30" y1="60" x2="62" y2="60"/><line x1="610" y1="200" x2="555" y2="200"/>
+        <line x1="320" y1="565" x2="320" y2="520"/><line x1="30" y1="300" x2="150" y2="300"/>
+        <line x1="610" y1="96" x2="558" y2="96"/><line x1="610" y1="300" x2="372" y2="300"/>
+        <line x1="610" y1="420" x2="358" y2="420"/><line x1="147" y1="575" x2="147" y2="533"/>
+        <line x1="610" y1="140" x2="526" y2="140"/>
+      </g>
+      <g>
+        <circle cx="22" cy="60" r="13" fill="#b3121b"/><text x="22" y="60" class="num">1</text>
+        <circle cx="618" cy="200" r="13" fill="#b3121b"/><text x="618" y="200" class="num">2</text>
+        <circle cx="320" cy="578" r="13" fill="#b3121b"/><text x="320" y="578" class="num">3</text>
+        <circle cx="22" cy="300" r="13" fill="#b3121b"/><text x="22" y="300" class="num">4</text>
+        <circle cx="618" cy="140" r="13" fill="#b3121b"/><text x="618" y="140" class="num">5</text>
+        <circle cx="618" cy="300" r="13" fill="#b3121b"/><text x="618" y="300" class="num">6</text>
+        <circle cx="618" cy="96" r="13" fill="#b3121b"/><text x="618" y="96" class="num">7</text>
+        <circle cx="618" cy="420" r="13" fill="#b3121b"/><text x="618" y="420" class="num">8</text>
+        <circle cx="147" cy="586" r="13" fill="#b3121b"/><text x="147" y="586" class="num">9</text>
+      </g>
+    </svg>
+    <p style="font-size:17px;line-height:25px;margin:8px 0 0;columns:2">
+      <b>1</b> Outer frame (fixed to wall)<br><b>2</b> Sash — the opening part<br><b>3</b> Mullion (vertical divider)<br>
+      <b>4</b> Double-glazed unit<br><b>5</b> Glazing bead + gaskets<br><b>6</b> Handle → gearbox<br>
+      <b>7</b> Hinges / stays<br><b>8</b> Locking points (cams)<br><b>9</b> Drainage slots
+    </p>
+  </div>
+
+  <div class="item note" style="left:1260px;top:640px;width:330px;--r:3deg">Every part of a window has a job.<small>so let's investigate them one by one →</small></div>
+  <div class="item note green" style="left:1660px;top:660px;width:360px;--r:-2.5deg">uPVC is the <u>most-used</u> window frame material in Germany &amp; the UK<small>and fast-growing in India since the 2000s</small></div>
+  <div class="item note pink" style="left:2100px;top:630px;width:330px;--r:2deg">In US catalogues the same thing is called <b>“vinyl windows”</b></div>
+</div>
+
+<!-- ================= 01 MATERIAL (step 2) ================= -->
+<div class="cluster" data-step="2" data-name="01 · The material" style="left:100px;top:100px">
+  <div class="item head" style="left:40px;top:30px;width:560px;--r:-1deg"><span class="no">01 / 10</span><h2>The material</h2><p>what is “uPVC” actually?</p></div>
+
+  <div class="item card" style="left:40px;top:250px;width:600px;--r:.8deg">
+    <h3>u · P · V · C</h3>
+    <p><b>Unplasticised PolyVinyl Chloride</b> — rigid PVC with <b>no plasticisers</b>. (Soft PVC — hoses, cable sheathing — has them added.)</p>
+    <p><b>Typical recipe:</b> PVC resin + heat stabilisers (calcium-zinc; lead was phased out in Europe by 2015) + impact modifiers + titanium dioxide (UV protection &amp; the white colour) + lubricants/fillers.</p>
+    <p>It is a <b>thermoplastic</b>: it softens with heat, so it can be <b>extruded, fusion-welded and recycled</b>.</p>
+  </div>
+
+  <div class="item note" style="left:690px;top:40px;width:270px;--r:-4deg">Why doesn't it rot or rust?</div>
+  <div class="item card" style="left:690px;top:240px;width:330px;--r:2deg">
+    <h3>Because…</h3>
+    <p>No wood fibre to rot, no exposed metal to corrode. Moisture, salt air and most chemicals don't attack it.</p>
+    <p>Maintenance = <b>wash it</b>. No painting.</p>
+  </div>
+
+  <figure class="item photo" style="left:1070px;top:40px;width:300px;--r:2.5deg">
+    <img src="img/india.jpg" alt="White uPVC window with golden grill in Pondicherry">
+    <figcaption>uPVC in India — Pondicherry. Note the separate security grill outside.<small>Photo: iMahesh · CC BY-SA 4.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1400px;top:90px;width:300px;--r:-2deg">
+    <img src="img/dh.jpg" alt="White vinyl double hung window">
+    <figcaption>“Vinyl” double-hung window, USA — same material.<small>Photo: Tucker T · CC0 · Wikimedia Commons</small></figcaption>
+  </figure>
+
+  <div class="item sheet" style="left:40px;top:700px;width:980px;--r:-.5deg">
+    <h3>How a window is made — factory flow</h3>
+    <div class="flow">
+      <span>PVC compound (dry blend)</span><i>→</i><span>Extrusion through a die</span><i>→</i><span>Calibrate &amp; cool</span><i>→</i><span>Cut to length, 45° mitre</span><i>→</i>
+      <span>Insert steel, screw</span><i>→</i><span>Fusion-weld corners (~240 °C)</span><i>→</i><span>Clean weld bead</span><i>→</i><span>Fit hardware &amp; gaskets</span><i>→</i><span>Glaze</span><i>→</i><span>Test &amp; dispatch</span>
+    </div>
+  </div>
+
+  <div class="item card" style="left:1070px;top:610px;width:600px;--r:1.2deg">
+    <h3>Colours &amp; finishes</h3>
+    <ul>
+      <li><b>White</b> is standard (through-coloured).</li>
+      <li><b>Foil laminates</b> — woodgrain (golden oak, walnut) or greys like anthracite.</li>
+      <li>Dark colours absorb sun → <b>hotter profile, more expansion</b>, so makers cap sash sizes and add more steel.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= 02 PROFILE (step 3) ================= -->
+<div class="cluster" data-step="3" data-name="02 · The profile" style="left:2000px;top:100px">
+  <div class="item head" style="left:40px;top:30px;width:560px;--r:.8deg"><span class="no">02 / 10</span><h2>The profile</h2><p>the hollow skeleton of the frame</p></div>
+
+  <div class="item sheet" style="left:30px;top:220px;width:780px;--r:-.7deg">
+    <h3>Section through sash &amp; frame (schematic)</h3>
+    <svg viewBox="0 0 640 420">
+      <text x="20" y="20" class="lblb">OUTSIDE</text><text x="250" y="20" class="lblb" text-anchor="end">INSIDE</text>
+      <!-- glass -->
+      <rect x="100" y="30" width="7" height="150" fill="#bfe0f5" stroke="#1f2a44"/>
+      <rect x="133" y="30" width="7" height="150" fill="#bfe0f5" stroke="#1f2a44"/>
+      <rect x="107" y="152" width="26" height="14" fill="#9aa" stroke="#1f2a44"/>
+      <g fill="#c58b2b"><circle cx="113" cy="159" r="2"/><circle cx="120" cy="159" r="2"/><circle cx="127" cy="159" r="2"/></g>
+      <rect x="100" y="166" width="40" height="12" fill="#333"/>
+      <!-- sash -->
+      <path d="M72 120 H98 V182 H186 V120 H200 V270 H72 Z" fill="#fff" stroke="#1f2a44" stroke-width="2.5"/>
+      <line x1="110" y1="182" x2="110" y2="270" stroke="#1f2a44" stroke-width="2"/><line x1="170" y1="182" x2="170" y2="270" stroke="#1f2a44" stroke-width="2"/>
+      <line x1="72" y1="210" x2="110" y2="210" stroke="#1f2a44" stroke-width="1.5"/>
+      <path d="M116 190 H164 V262 H116 Z M122 196 V256 H158 V196" fill="url(#hatch)" stroke="#555" fill-rule="evenodd"/>
+      <!-- glazing bead -->
+      <path d="M142 120 H184 V180 H142 Z" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <!-- gaskets -->
+      <g fill="#111"><rect x="93" y="122" width="7" height="12" rx="3"/><rect x="140" y="122" width="7" height="12" rx="3"/>
+        <rect x="72" y="270" width="12" height="8" rx="3"/><rect x="190" y="270" width="10" height="8" rx="3"/></g>
+      <!-- frame -->
+      <path d="M50 230 H66 V278 H210 V250 H226 V380 H50 Z" fill="#fff" stroke="#1f2a44" stroke-width="2.5"/>
+      <line x1="96" y1="278" x2="96" y2="380" stroke="#1f2a44" stroke-width="2"/><line x1="182" y1="278" x2="182" y2="380" stroke="#1f2a44" stroke-width="2"/>
+      <line x1="182" y1="330" x2="226" y2="330" stroke="#1f2a44" stroke-width="1.5"/>
+      <path d="M104 290 H174 V372 H104 Z M111 297 V365 H167 V297" fill="url(#hatch)" stroke="#555" fill-rule="evenodd"/>
+      <!-- hardware groove -->
+      <rect x="140" y="262" width="26" height="8" fill="#ffcf4a" stroke="#1f2a44"/>
+      <!-- drainage path -->
+      <path d="M70 262 Q68 290 80 300 T64 360 L30 375" fill="none" stroke="#1f6fb5" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arrb)"/>
+      <rect x="47" y="366" width="6" height="12" fill="#fff"/>
+      <!-- leaders -->
+      <g stroke="#b3121b" stroke-width="1.4" fill="none">
+        <path d="M120 60 H330"/><path d="M175 140 H330"/><path d="M96 128 L80 100 H330"/>
+        <path d="M150 220 H330"/><path d="M140 330 H330"/><path d="M220 300 H330"/><path d="M60 330 L30 300 V218"/>
+        <path d="M160 266 L330 266"/>
+      </g>
+      <g class="lbl">
+        <text x="338" y="65">Double-glazed unit (24–44 mm)</text>
+        <text x="338" y="105">EPDM gaskets — seal glass &amp; sash</text>
+        <text x="338" y="145">Glazing bead — clips in from INSIDE</text>
+        <text x="338" y="225">Sash profile + steel reinforcement</text>
+        <text x="338" y="271">Euro groove — hardware runs here</text>
+        <text x="338" y="305">Inner chambers = insulating air</text>
+        <text x="338" y="335">Frame profile + steel reinforcement</text>
+      </g>
+      <text x="2" y="196" class="lbl" style="fill:#1f6fb5;font-size:13px">drainage</text><text x="2" y="212" class="lbl" style="fill:#1f6fb5;font-size:13px">chamber</text>
+      <text x="20" y="405" class="lbl" style="fill:#1f6fb5">weep slot → water exits outside</text>
+    </svg>
+    <div class="titleblock"><span>DWG 02-A</span><span>NOT TO SCALE</span><span>typical 70 mm system</span></div>
+  </div>
+
+  <div class="item card" style="left:860px;top:30px;width:410px;--r:1.5deg">
+    <h3>Chambers</h3>
+    <p>The profile is a hollow extrusion split into <b>3 to 7 chambers</b>. Each trapped air pocket slows heat flow.</p>
+    <p>Outer chamber → <b>drainage</b>. Middle → <b>steel</b>. Inner → <b>insulation &amp; screw fixing</b>.</p>
+  </div>
+  <div class="item card" style="left:1300px;top:60px;width:400px;--r:-1.8deg">
+    <h3>Steel inside</h3>
+    <p><b>Galvanised steel</b> U- or box-sections (≈1.5–2 mm) slide into the main chamber and are screwed in.</p>
+    <p>They stop long or dark-coloured profiles from bowing under wind load and heat.</p>
+    <p class="src">Some new systems are steel-free, using bonded glass instead (e.g. aluplast energeto).</p>
+  </div>
+  <div class="item card" style="left:860px;top:450px;width:410px;--r:-1deg">
+    <h3>Ask for: depth &amp; class</h3>
+    <p><b>Build depth</b>: 60 / 70 / 76 / 82 mm. Deeper = more chambers, thicker glass.</p>
+    <p><b>EN 12608 wall class</b>: <b>A</b> ≥ 2.8 mm outer walls · B ≥ 2.5 mm · C = no minimum. Specify <b>Class A</b>.</p>
+  </div>
+  <div class="item note pink" style="left:1320px;top:470px;width:300px;--r:3.5deg">What happens to rain that gets past the seal?</div>
+  <div class="item card" style="left:1290px;top:700px;width:410px;--r:1deg">
+    <h3>Drained, not stopped</h3>
+    <p>Water in the rebate falls into the <b>outer chamber</b> and leaves through hooded <b>weep slots</b>. Corners are <b>welded</b>, so there's no joint to leak.</p>
+    <p><b>Never seal over drain slots!</b></p>
+  </div>
+</div>
+
+<!-- ================= 03 GLASS (step 4) ================= -->
+<div class="cluster" data-step="4" data-name="03 · The glass" style="left:3900px;top:100px">
+  <div class="item head" style="left:40px;top:30px;width:520px;--r:-.8deg"><span class="no">03 / 10</span><h2>The glass</h2><p>70–80% of the window's area</p></div>
+
+  <div class="item sheet" style="left:30px;top:220px;width:700px;--r:.6deg">
+    <h3>Double-glazed unit (DGU) — edge detail</h3>
+    <svg viewBox="0 0 600 400">
+      <text x="30" y="24" class="lblb">OUTSIDE</text><text x="300" y="24" class="lblb">INSIDE</text>
+      <rect x="90" y="40" width="22" height="300" fill="#bfe0f5" stroke="#1f2a44" stroke-width="2"/>
+      <rect x="230" y="40" width="22" height="300" fill="#bfe0f5" stroke="#1f2a44" stroke-width="2"/>
+      <rect x="112" y="40" width="118" height="245" fill="#eef6ff"/>
+      <text x="171" y="130" text-anchor="middle" class="lbl" style="font-size:17px">argon gas</text>
+      <text x="171" y="152" text-anchor="middle" class="lbl" style="font-size:13px">(or dry air)</text>
+      <line x1="229" y1="44" x2="229" y2="280" stroke="#b3121b" stroke-width="3" stroke-dasharray="2 4"/>
+      <rect x="118" y="255" width="106" height="32" fill="#a9b4bd" stroke="#1f2a44"/>
+      <g fill="#c58b2b"><circle cx="135" cy="271" r="4"/><circle cx="152" cy="271" r="4"/><circle cx="169" cy="271" r="4"/><circle cx="186" cy="271" r="4"/><circle cx="203" cy="271" r="4"/></g>
+      <rect x="112" y="255" width="6" height="32" fill="#222"/><rect x="224" y="255" width="6" height="32" fill="#222"/>
+      <rect x="90" y="290" width="162" height="40" fill="#555"/>
+      <!-- surface numbers -->
+      <g><circle cx="78" cy="70" r="11" fill="#1f2a44"/><text x="78" y="70" class="num" style="font-size:13px">1</text>
+        <circle cx="124" cy="70" r="11" fill="#1f2a44"/><text x="124" y="70" class="num" style="font-size:13px">2</text>
+        <circle cx="218" cy="70" r="11" fill="#b3121b"/><text x="218" y="70" class="num" style="font-size:13px">3</text>
+        <circle cx="264" cy="70" r="11" fill="#1f2a44"/><text x="264" y="70" class="num" style="font-size:13px">4</text></g>
+      <!-- heat arrow -->
+      <path d="M330 190 C300 185 260 190 236 200" fill="none" stroke="#e36414" stroke-width="3" marker-end="url(#arr)"/>
+      <path d="M236 210 C260 225 300 228 330 225" fill="none" stroke="#e36414" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arr)"/>
+      <text x="336" y="196" class="lbl" style="fill:#e36414">room heat…</text>
+      <text x="336" y="232" class="lbl" style="fill:#e36414">…reflected back by low-E</text>
+      <g stroke="#b3121b" stroke-width="1.4"><line x1="229" y1="110" x2="330" y2="110"/><line x1="200" y1="262" x2="330" y2="262"/>
+        <line x1="227" y1="282" x2="330" y2="292"/><line x1="240" y1="320" x2="330" y2="322"/></g>
+      <g class="lbl">
+        <text x="336" y="104">Low-E coating on surface 3</text><text x="336" y="122" style="font-size:13px">(invisible metal-oxide layer)</text>
+        <text x="336" y="266">Spacer bar filled with desiccant</text><text x="336" y="284" style="font-size:13px">beads absorb trapped moisture</text>
+        <text x="336" y="300">Primary seal: butyl</text>
+        <text x="336" y="326">Secondary seal: polysulphide/silicone</text>
+      </g>
+      <text x="101" y="372" text-anchor="middle" class="lbl" style="font-size:13px">4</text><text x="171" y="372" text-anchor="middle" class="lbl" style="font-size:13px">16 mm cavity</text><text x="241" y="372" text-anchor="middle" class="lbl" style="font-size:13px">4</text>
+      <path d="M90 352 H252" stroke="#1f2a44" marker-start="url(#arrk)" marker-end="url(#arrk)"/>
+      <text x="171" y="395" text-anchor="middle" class="lblb">“4-16-4” = 24 mm unit</text>
+    </svg>
+  </div>
+
+  <div class="item sheet" style="left:770px;top:40px;width:520px;--r:-1.2deg">
+    <h3>U-value: lower = warmer</h3>
+    <p class="sub">centre-of-glass, W/m²K, typical figures</p>
+    <svg viewBox="0 0 480 230">
+      <g class="lbl" style="font-size:15px">
+        <text x="0" y="30">Single 4 mm</text><text x="0" y="80">DGU air 4-12-4</text><text x="0" y="130">DGU low-E + argon</text><text x="0" y="180">Triple low-E + argon</text></g>
+      <rect x="160" y="14" width="290" height="26" fill="#b3121b"/><text x="440" y="32" text-anchor="end" class="num">5.8</text>
+      <rect x="160" y="64" width="140" height="26" fill="#e36414"/><text x="292" y="82" text-anchor="end" class="num">2.8</text>
+      <rect x="160" y="114" width="55" height="26" fill="#3a86c8"/><text x="225" y="132" class="lbl" style="font-weight:700">1.1</text>
+      <rect x="160" y="164" width="30" height="26" fill="#1a7f37"/><text x="198" y="182" class="lbl" style="font-weight:700">0.6</text>
+      <text x="0" y="222" class="lbl" style="font-size:13px">U = heat (W) lost per m² for each 1 °C difference inside↔outside</text>
+    </svg>
+  </div>
+
+  <figure class="item photo" style="left:1320px;top:30px;width:340px;--r:2.2deg">
+    <img src="img/timber.jpg" alt="Cut-away window frame showing double glazing spacer with desiccant beads">
+    <figcaption>Real cut-away: spot the <b>desiccant beads</b> in the spacer, the gaskets and the hardware groove. (Timber profile — same glazing logic.)<small>Photo: Kozuch · CC BY-SA 3.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+
+  <div class="item card" style="left:770px;top:470px;width:520px;--r:1deg">
+    <h3>Safety &amp; special glass</h3>
+    <ul>
+      <li><b>Toughened</b>: ~4–5× stronger, breaks into blunt cubes. Needed near floors &amp; in doors.</li>
+      <li><b>Laminated</b>: PVB interlayer holds the shards together → security &amp; sound control.</li>
+      <li><b>Acoustic</b>: uneven panes (e.g. 6-16-4) so the two panes don't vibrate together.</li>
+      <li><b>Warm-edge spacer</b> (plastic/steel instead of aluminium) = less condensation at the edge.</li>
+    </ul>
+  </div>
+  <div class="item note" style="left:1340px;top:700px;width:300px;--r:-3deg">Why do old double-glazed windows fog up <u>between</u> the panes?<small>the seal failed → desiccant saturated → replace the unit</small></div>
+</div>
+
+<!-- ================= 04 WINDOW TYPES (step 5) ================= -->
+<div class="cluster" data-step="5" data-name="04 · Window types" style="left:5800px;top:100px">
+  <div class="item head" style="left:40px;top:30px;width:560px;--r:1deg"><span class="no">04 / 10</span><h2>Window types</h2><p>how the sash moves</p></div>
+
+  <div class="item sheet" style="left:30px;top:220px;width:860px;--r:-.5deg">
+    <h3>Opening types — elevation symbols</h3>
+    <p class="sub">drafting convention: the point of the triangle shows the <b>hinge side</b></p>
+    <svg id="typesGrid" viewBox="0 0 800 460"></svg>
+  </div>
+
+  <figure class="item photo" style="left:930px;top:30px;width:360px;--r:-2deg">
+    <img src="img/casement.jpg" alt="Pair of modern casement windows">
+    <figcaption>Pair of side-hung casements<small>Photo: Stilfehler · CC BY-SA 4.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1330px;top:60px;width:330px;--r:2.4deg">
+    <img src="img/sash.jpg" alt="uPVC vertical sliding sash windows on a period house">
+    <figcaption>uPVC vertical sliding <b>sash</b> on a period house<small>Photo: Durajoin · CC BY-SA 4.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+
+  <div class="item card" style="left:930px;top:470px;width:740px;--r:.8deg">
+    <h3>Choosing one</h3>
+    <p><b>Casement</b> — best seal, full opening; needs swing space outside.</p>
+    <p><b>Sliding</b> — no swing, good for balconies; seal is weaker &amp; tracks need drainage.</p>
+    <p><b>Tilt &amp; turn</b> — secure ventilation + glass cleaned from inside.</p>
+    <p><b>Top-hung</b> — ventilate even in rain. <b>Fixed</b> — cheapest, best performance, biggest panes.</p>
+  </div>
+  <div class="item note green" style="left:90px;top:800px;width:320px;--r:-3deg">Which window for a 12th-floor flat?<small>tilt &amp; turn — cleanable from inside, secure tilt vent</small></div>
+</div>
+
+<!-- ================= 05 DOORS (step 6) ================= -->
+<div class="cluster" data-step="6" data-name="05 · Doors" style="left:5800px;top:1300px">
+  <div class="item head" style="left:40px;top:30px;width:520px;--r:-1deg"><span class="no">05 / 10</span><h2>Doors</h2><p>bigger, heavier, more hardware</p></div>
+
+  <div class="item sheet" style="left:30px;top:210px;width:860px;--r:.6deg">
+    <h3>Door types — elevation &amp; plan</h3>
+    <svg id="doorsGrid" viewBox="0 0 800 490"></svg>
+  </div>
+
+  <figure class="item photo" style="left:930px;top:30px;width:420px;--r:2deg">
+    <img src="img/liftslide.jpg" alt="Large lift and slide door">
+    <figcaption><b>Lift &amp; slide</b>: turning the handle lifts the sash off its seals onto rollers; turning it back drops it down to seal tight.<small>Photo: Gretsch-Unitas · CC BY-SA 4.0 · Wikimedia Commons (timber shown; same gear in uPVC)</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1380px;top:60px;width:300px;--r:-2deg">
+    <h3>Bi-fold</h3>
+    <p>Panels fold like a concertina onto rollers. One panel is a <b>“traffic door”</b> for daily use.</p>
+  </div>
+  <div class="item card" style="left:930px;top:560px;width:740px;--r:-.8deg">
+    <h3>Entrance door kit</h3>
+    <ul>
+      <li><b>Multipoint lock</b>: hooks, bolts &amp; rollers along the whole edge — lifting the lever throws them.</li>
+      <li><b>Euro-profile cylinder</b>: choose anti-snap / anti-bump.</li>
+      <li><b>Flag hinges</b> or 3D-adjustable hinges (height, side, compression).</li>
+      <li><b>Low aluminium threshold</b> (≈15–20 mm) for wheelchair access.</li>
+      <li>Reinforced panels; sidelights in toughened or laminated glass.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= 06 HARDWARE – LOCKING (step 7) ================= -->
+<div class="cluster" data-step="7" data-name="06 · Hardware: locking" style="left:5800px;top:2500px">
+  <div class="item head" style="left:40px;top:30px;width:600px;--r:.8deg"><span class="no">06 / 10</span><h2>Hardware: locking</h2><p>one handle, many locking points</p></div>
+
+  <div class="item sheet play-on-step" style="left:40px;top:220px;width:440px;--r:-1deg">
+    <h3>Multipoint lock (espag)</h3>
+    <p class="sub">turn the handle → bar slides → cams hook behind keeps</p>
+    <svg class="mpl" viewBox="0 0 320 560">
+      <rect x="40" y="20" width="40" height="520" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <text x="60" y="552" text-anchor="middle" class="lbl" style="font-size:13px">FRAME</text>
+      <rect x="90" y="20" width="60" height="520" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <text x="120" y="552" text-anchor="middle" class="lbl" style="font-size:13px">SASH</text>
+      <!-- keeps -->
+      <g fill="#ffcf4a" stroke="#1f2a44"><path d="M58 92 h24 v26 h-24 z"/><path d="M58 202 h24 v26 h-24 z"/><path d="M58 352 h24 v26 h-24 z"/><path d="M58 462 h24 v26 h-24 z"/></g>
+      <g class="rod">
+        <rect x="100" y="40" width="12" height="480" fill="#9aa5b1" stroke="#1f2a44"/>
+        <g fill="#1f2a44"><circle cx="88" cy="80" r="10"/><rect x="88" y="76" width="14" height="8"/>
+          <circle cx="88" cy="190" r="10"/><rect x="88" y="186" width="14" height="8"/>
+          <circle cx="88" cy="340" r="10"/><rect x="88" y="336" width="14" height="8"/>
+          <circle cx="88" cy="450" r="10"/><rect x="88" y="446" width="14" height="8"/></g>
+      </g>
+      <rect x="118" y="262" width="28" height="44" fill="#ccc" stroke="#1f2a44"/>
+      <g class="hdl"><rect x="190" y="270" width="20" height="20" rx="5" fill="#1f2a44"/><rect x="194" y="280" width="12" height="90" rx="6" fill="#1f2a44"/></g>
+      <line x1="146" y1="284" x2="190" y2="280" stroke="#1f2a44" stroke-width="3"/>
+      <g stroke="#b3121b" stroke-width="1.3"><line x1="83" y1="105" x2="230" y2="105"/><line x1="98" y1="190" x2="230" y2="175"/><line x1="112" y1="420" x2="230" y2="430"/><line x1="146" y1="300" x2="230" y2="330"/></g>
+      <g class="lbl" style="font-size:14px"><text x="234" y="109">keep</text><text x="234" y="179">mushroom</text><text x="234" y="195">cam</text>
+        <text x="234" y="434">drive bar</text><text x="234" y="334">gearbox</text><text x="234" y="350">in groove</text></g>
+    </svg>
+  </div>
+
+  <div class="item card" style="left:520px;top:200px;width:500px;--r:1.4deg">
+    <h3>Why so many points?</h3>
+    <p>Each cam <b>pulls the sash onto the gasket</b> → airtight &amp; watertight — and every point is one more place a burglar has to defeat.</p>
+    <p>Small sash: 2–3 points. Big door: 5–9 points (hooks + bolts + rollers).</p>
+    <p><b>Eccentric cams</b> can be rotated to adjust the seal pressure.</p>
+  </div>
+  <figure class="item photo" style="left:1060px;top:30px;width:330px;--r:-2.5deg">
+    <img src="img/diderot.jpg" alt="1771 engraving of espagnolette bolts from Diderot's Encyclopédie">
+    <figcaption><b>1771</b> — Diderot's Encyclopédie already shows espagnolette rods. Today's lock is the same idea, hidden inside the profile.<small>Public domain · Wikimedia Commons</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1420px;top:80px;width:270px;--r:2deg">
+    <img src="img/espag.jpg" alt="Traditional espagnolette bar on shutters">
+    <figcaption>A traditional espagnolette bar on shutters<small>Photo: Nerijp · CC BY-SA 3.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:560px;top:600px;width:220px;--r:-3deg">
+    <img src="img/handle.jpg" alt="White lockable window handle">
+    <figcaption>Lockable handle — child safety<small>Photo: Sandra Hässig · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <div class="item note" style="left:840px;top:640px;width:300px;--r:3deg">Why does ONE handle lock FOUR points?<small>the bar connects them all — look left</small></div>
+  <div class="item card" style="left:1200px;top:640px;width:470px;--r:-1deg">
+    <h3>Security ratings</h3>
+    <p><b>EN 1627 RC2</b> (Europe) / <b>PAS 24</b> (UK): tested against a burglar with simple tools. Needs the whole set — profile, hardware, glass and fixing.</p>
+  </div>
+</div>
+
+<!-- ================= 07 HARDWARE – MOVING (step 8) ================= -->
+<div class="cluster" data-step="8" data-name="07 · Hardware: moving" style="left:3900px;top:2500px">
+  <div class="item head" style="left:40px;top:30px;width:600px;--r:-.8deg"><span class="no">07 / 10</span><h2>Hardware: moving</h2><p>hinges, stays &amp; the tilt-turn trick</p></div>
+
+  <div class="item sheet" style="left:30px;top:210px;width:820px;--r:.6deg">
+    <h3>Tilt &amp; turn — three handle positions</h3>
+    <svg viewBox="0 0 780 300">
+      <g id="tt"></g>
+    </svg>
+  </div>
+
+  <div class="item sheet" style="left:890px;top:40px;width:780px;--r:-1deg">
+    <h3>Friction stay (seen from above)</h3>
+    <svg viewBox="0 0 700 330">
+      <rect x="30" y="240" width="560" height="14" fill="#ffcf4a" stroke="#1f2a44"/>
+      <text x="40" y="280" class="lbl">TRACK — screwed to the frame</text>
+      <rect x="170" y="228" width="44" height="22" fill="#1f2a44"/>
+      <line x1="192" y1="239" x2="520" y2="70" stroke="#9aa5b1" stroke-width="12" stroke-linecap="round"/>
+      <line x1="200" y1="226" x2="530" y2="56" stroke="#1f2a44" stroke-width="14" opacity=".2"/>
+      <line x1="470" y1="247" x2="356" y2="155" stroke="#555" stroke-width="9" stroke-linecap="round"/>
+      <g fill="#b3121b"><circle cx="192" cy="239" r="6"/><circle cx="470" cy="247" r="6"/><circle cx="356" cy="155" r="6"/></g>
+      <path d="M130 200 L180 232" stroke="#b3121b" marker-end="url(#arr)"/><path d="M230 210 L260 240" stroke="#b3121b" marker-end="url(#arr)"/>
+      <text x="40" y="190" class="lblb">sliding shoe</text><text x="40" y="208" class="lbl" style="font-size:13px">friction pad holds any angle</text>
+      <text x="380" y="40" class="lbl">sash arm — the sash is fixed along it</text>
+      <text x="480" y="215" class="lbl">stay arm</text>
+      <path d="M40 262 H186" stroke="#1f6fb5" stroke-width="3" marker-start="url(#arrb)" marker-end="url(#arrb)"/>
+      <text x="40" y="318" class="lbl" style="fill:#1f6fb5">↑ gap opens at the hinge side → “easy-clean” from inside</text>
+    </svg>
+    <p style="font-size:17px;margin:4px 0 0">No visible hinges: the sash is carried on two stays (top &amp; bottom). <b>Egress stays</b> open to 90° for fire escape; <b>restrictors</b> limit opening to ~100 mm.</p>
+  </div>
+
+  <div class="item card" style="left:890px;top:560px;width:430px;--r:1.5deg">
+    <h3>Hinges</h3>
+    <p><b>Butt / flag hinges</b> on doors, often <b>3D-adjustable</b> — up/down, side-to-side and compression — so a sagging door is fixed with an Allen key.</p>
+    <p>Tilt-turn sashes hang on a <b>corner hinge + top scissor arm</b>.</p>
+  </div>
+  <div class="item card" style="left:1350px;top:560px;width:330px;--r:-1.5deg">
+    <h3>Small parts</h3>
+    <p><b>Trickle vents</b> — slots in the head for background air.</p>
+    <p><b>Misuse catch</b> — stops tilt &amp; turn happening at once.</p>
+  </div>
+  <div class="item note pink" style="left:200px;top:740px;width:320px;--r:-2deg">“Tilt-before-turn” handles swap the order — for schools &amp; kids' rooms</div>
+</div>
+
+<!-- ================= 08 INSTALLATION (step 9) ================= -->
+<div class="cluster" data-step="9" data-name="08 · Installation" style="left:2000px;top:2500px">
+  <div class="item head" style="left:40px;top:30px;width:540px;--r:1deg"><span class="no">08 / 10</span><h2>Installation</h2><p>a great window fitted badly is a bad window</p></div>
+
+  <div class="item sheet" style="left:30px;top:210px;width:720px;--r:-.6deg">
+    <h3>Sill section — the “3-layer” seal</h3>
+    <svg viewBox="0 0 640 430">
+      <text x="20" y="22" class="lblb">OUTSIDE</text><text x="560" y="22" class="lblb">INSIDE</text>
+      <rect x="200" y="30" width="40" height="120" fill="#bfe0f5" stroke="#1f2a44"/>
+      <rect x="170" y="150" width="110" height="60" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <rect x="150" y="210" width="160" height="60" fill="#fff" stroke="#1f2a44" stroke-width="2.5"/>
+      <line x1="190" y1="210" x2="190" y2="270" stroke="#1f2a44"/><line x1="270" y1="210" x2="270" y2="270" stroke="#1f2a44"/>
+      <rect x="200" y="220" width="60" height="40" fill="url(#hatch)" stroke="#555"/>
+      <rect x="150" y="270" width="160" height="26" fill="url(#foam)" stroke="#c9a23a"/>
+      <rect x="215" y="270" width="30" height="26" fill="#222"/>
+      <rect x="40" y="296" width="560" height="120" fill="url(#brick)" stroke="#8a5a3c"/>
+      <path d="M150 262 L150 296 L40 316 L30 330 L40 330 L40 322 L150 300" fill="#d7dde3" stroke="#1f2a44"/>
+      <rect x="140" y="262" width="10" height="38" fill="#3a86c8"/>
+      <rect x="310" y="262" width="10" height="38" fill="#b3121b"/>
+      <rect x="320" y="256" width="200" height="14" fill="#e8d5b5" stroke="#8a6d3b"/>
+      <g stroke="#b3121b" stroke-width="1.3">
+        <line x1="145" y1="280" x2="60" y2="230"/><line x1="315" y1="285" x2="420" y2="330"/><line x1="180" y1="285" x2="420" y2="370"/>
+        <line x1="230" y1="290" x2="230" y2="345"/><line x1="40" y1="325" x2="20" y2="375"/><line x1="290" y1="240" x2="420" y2="200"/>
+      </g>
+      <g class="lbl" style="font-size:14px">
+        <text x="20" y="214">OUTER: weather-tight,</text><text x="20" y="230">vapour-OPEN tape / sealant</text>
+        <text x="424" y="326">INNER: airtight,</text><text x="424" y="342">vapour-TIGHT tape</text>
+        <text x="424" y="375">MIDDLE: PU foam insulation</text>
+        <text x="236" y="360">load-bearing packer</text>
+        <text x="10" y="392">external sill with drip</text>
+        <text x="424" y="196">frame on packers, steel inside</text>
+      </g>
+      <text x="320" y="425" text-anchor="middle" class="lblb">Rule: tighter on the inside than the outside</text>
+    </svg>
+  </div>
+
+  <div class="item sheet" style="left:790px;top:30px;width:420px;--r:1.2deg">
+    <h3>Fixing positions</h3>
+    <svg viewBox="0 0 380 420">
+      <rect x="60" y="30" width="260" height="340" fill="#fff" stroke="#1f2a44" stroke-width="5"/>
+      <rect x="80" y="50" width="220" height="300" fill="#dcecf7" stroke="#1f2a44"/>
+      <g fill="#b3121b"><circle cx="60" cy="70" r="7"/><circle cx="60" cy="200" r="7"/><circle cx="60" cy="330" r="7"/>
+        <circle cx="320" cy="70" r="7"/><circle cx="320" cy="200" r="7"/><circle cx="320" cy="330" r="7"/>
+        <circle cx="100" cy="30" r="7"/><circle cx="280" cy="30" r="7"/></g>
+      <g fill="#222"><rect x="64" y="370" width="30" height="12"/><rect x="286" y="370" width="30" height="12"/></g>
+      <path d="M30 30 V70" stroke="#1f2a44" marker-start="url(#arrk)" marker-end="url(#arrk)"/>
+      <text x="4" y="58" class="lbl" style="font-size:12px" transform="rotate(-90 22 55)">≤150</text>
+      <path d="M30 70 V200" stroke="#1f2a44" marker-start="url(#arrk)" marker-end="url(#arrk)"/>
+      <text x="18" y="160" class="lbl" style="font-size:12px" transform="rotate(-90 22 140)">≤ 600–700 c/c</text>
+      <text x="190" y="405" text-anchor="middle" class="lbl">● fixings  ▬ packers under corners/mullions</text>
+    </svg>
+  </div>
+
+  <div class="item card" style="left:1240px;top:30px;width:440px;--r:-1.5deg">
+    <h3>Sequence</h3>
+    <ol>
+      <li>Survey &amp; measure the opening; allow a 5–10 mm gap each side</li>
+      <li>Set the frame on <b>load-bearing packers</b></li>
+      <li>Plumb, level, square — check that the diagonals match</li>
+      <li>Fix through the frame or with lugs into the wall</li>
+      <li>Fill the gap with foam; seal inside &amp; outside</li>
+      <li>Glaze on <b>glazing packers</b> (“toe &amp; heel”) so the sash stays square</li>
+      <li>Adjust the hardware, test, keep drain slots clear</li>
+    </ol>
+  </div>
+  <div class="item note green" style="left:820px;top:690px;width:330px;--r:-3deg">Why leave a gap? PVC <b>expands</b>: ~0.07 mm per metre per °C<small>a 2 m frame in a 40 °C swing moves ≈ 5–6 mm</small></div>
+  <div class="item note" style="left:1240px;top:740px;width:310px;--r:2.5deg">Foam insulates —<br>it does NOT carry load.<small>packers &amp; fixings do</small></div>
+</div>
+
+<!-- ================= 09 PERFORMANCE (step 10) ================= -->
+<div class="cluster" data-step="10" data-name="09 · Performance" style="left:100px;top:2500px">
+  <div class="item head" style="left:40px;top:30px;width:560px;--r:-1deg"><span class="no">09 / 10</span><h2>Performance</h2><p>what the test certificates mean</p></div>
+
+  <div class="item card" style="left:40px;top:220px;width:520px;--r:1deg">
+    <h3>Thermal</h3>
+    <p>PVC conducts heat at λ ≈ <b>0.17 W/mK</b>. Aluminium: ≈ <b>160</b> — <b>~1000× more</b>. That's why aluminium needs a “thermal break”.</p>
+    <p>Typical double-glazed uPVC window: <b>U<sub>w</sub> ≈ 1.2–1.4 W/m²K</b>. Deep triple-glazed systems reach <b>&lt; 0.8</b> (Passivhaus).</p>
+  </div>
+  <div class="item card" style="left:600px;top:60px;width:520px;--r:-1.4deg">
+    <h3>Weather tests (EN 14351-1)</h3>
+    <ul>
+      <li><b>Air permeability</b> — EN 12207, class 1→4</li>
+      <li><b>Watertightness</b> — EN 12208, 1A→9A, E</li>
+      <li><b>Wind load</b> — EN 12210, A/B/C 1→5</li>
+    </ul>
+    <p>Higher class = tested at higher pressure. Ask for the certificate.</p>
+  </div>
+  <div class="item card" style="left:600px;top:470px;width:520px;--r:1.2deg">
+    <h3>Acoustic</h3>
+    <p>R<sub>w</sub> ≈ <b>30–45 dB</b>, decided mostly by the <b>glass</b> (laminated, uneven panes) and by <b>airtight seals</b>. A gap lets sound in more than a thin pane.</p>
+  </div>
+  <div class="item card" style="left:1160px;top:220px;width:500px;--r:-1deg">
+    <h3>Weak points — be honest</h3>
+    <ul>
+      <li>Softens at ≈ <b>75–80 °C</b>; not a fire-rated material. When it burns it gives off smoke and HCl gas (it does self-extinguish).</li>
+      <li><b>Chunky sightlines</b> compared with aluminium.</li>
+      <li>Large or dark spans need steel.</li>
+      <li>Hard to repair: a damaged profile is usually replaced.</li>
+    </ul>
+  </div>
+  <div class="item note pink" style="left:100px;top:620px;width:330px;--r:-2.5deg">Is plastic really “green”?<small>energy saved in use vs PVC chemistry &amp; end of life — discuss!</small></div>
+  <div class="item card" style="left:1160px;top:700px;width:500px;--r:1.5deg">
+    <h3>Life &amp; recycling</h3>
+    <p>Lifespan quoted ≈ <b>25–35 years</b>. Old frames can be recycled into new profile cores (claims range from 7 to 10 cycles). Europe's <b>VinylPlus</b> programme collects old windows.</p>
+  </div>
+</div>
+
+<!-- ================= 10 COMPARE (step 11) ================= -->
+<div class="cluster" data-step="11" data-name="10 · uPVC vs the rest" style="left:100px;top:1300px">
+  <div class="item head" style="left:40px;top:30px;width:560px;--r:.8deg"><span class="no">10 / 10</span><h2>uPVC vs the rest</h2><p>the same window in three materials</p></div>
+  <div class="item sheet" style="left:30px;top:200px;width:1190px;--r:-.4deg">
+    <h3>Comparison sheet</h3>
+    <table class="cmp">
+      <tr><th></th><th>uPVC</th><th>Aluminium (thermally broken)</th><th>Timber</th></tr>
+      <tr><td>Cost</td><td class="win">Lowest</td><td>High</td><td>High</td></tr>
+      <tr><td>Whole-window U<sub>w</sub></td><td class="win">≈ 1.2–1.4</td><td>≈ 1.2–1.6 (needs thermal break)</td><td>≈ 1.3–1.5</td></tr>
+      <tr><td>Sightlines</td><td>Chunky</td><td class="win">Slimmest, largest spans</td><td>Medium</td></tr>
+      <tr><td>Maintenance</td><td class="win">Wash</td><td class="win">Wash</td><td>Re-finish every 5–8 yrs</td></tr>
+      <tr><td>Lifespan (quoted)</td><td>25–35 yrs</td><td>30–45+ yrs</td><td class="win">40–60+ yrs</td></tr>
+      <tr><td>Coastal / humid</td><td class="win">Excellent</td><td>Good (marine coat)</td><td>Needs care</td></tr>
+      <tr><td>End of life</td><td>Recyclable (limited loops)</td><td class="win">Highly recyclable</td><td class="win">Renewable</td></tr>
+    </table>
+    <p class="src" style="font-size:13px;color:#667;margin:8px 0 0">Ranges compiled from manufacturer &amp; industry guides; real values depend on the system — always check the test certificate.</p>
+  </div>
+  <div class="item note" style="left:1290px;top:60px;width:340px;--r:3deg">So when would YOU choose aluminium instead?<small>big glass, slim frames, commercial façades</small></div>
+  <div class="item note green" style="left:1300px;top:480px;width:330px;--r:-2deg">When timber?<small>heritage &amp; conservation areas</small></div>
+</div>
+
+<!-- ================= CHECKLIST (step 12) ================= -->
+<div class="cluster" data-step="12" data-name="Specifier's checklist" style="left:4700px;top:1340px">
+  <div class="item card tape" style="left:0;top:0;width:820px;--r:1.2deg">
+    <h3>✔ The architect's spec checklist</h3>
+    <ol style="columns:2;column-gap:34px">
+      <li>Profile system &amp; build depth</li>
+      <li>Number of chambers</li>
+      <li>EN 12608 <b>Class A</b> walls</li>
+      <li>Steel reinforcement</li>
+      <li>Glass build-up &amp; U<sub>g</sub></li>
+      <li>Safety glass zones</li>
+      <li>Whole-window <b>U<sub>w</sub></b></li>
+      <li>Opening types &amp; escape</li>
+      <li>Hardware brand &amp; locking points</li>
+      <li>Air / water / wind classes</li>
+      <li>Security: RC2 / PAS 24</li>
+      <li>Colour / foil &amp; size limits</li>
+      <li>Installation detail &amp; sill</li>
+      <li>Warranty &amp; service</li>
+    </ol>
+  </div>
+</div>
+
+<svg id="pins" width="7600" height="3600"></svg>
+</div>
+</div>
+
+<div id="hud">
+  <button id="prev" title="Previous (←)">◀</button>
+  <span class="t" id="ht">—</span><span id="hc"></span>
+  <button id="next" title="Next (→ / Space)">▶</button>
+  <span class="k">← → / space · click a card to zoom · O overview · C credits · F fullscreen · H hide bar</span>
+  <button id="cbtn">Credits</button>
+</div>
+
+<div id="credits"><div class="in">
+  <h2>Credits &amp; sources</h2>
+  <p><b>Photographs</b> (Wikimedia Commons, used under their licences):</p>
+  <ul>
+    <li>Pondicherry uPVC window — iMahesh, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Windows_of_Pondicherry_-_Orange_wall,_UPVC_window_and_Golden_grill.jpg">source</a></li>
+    <li>Double hung window — Tucker T, CC0 — <a href="https://commons.wikimedia.org/wiki/File:Double_hung_window.jpeg">source</a></li>
+    <li>EURO 68 wooden window profile with insulated glazing — Kozuch, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:EURO_68_wooden_window_profile_with_insulated_glazing_01.JPG">source</a></li>
+    <li>Modern Casement Window 01 — Stilfehler, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Modern_Casement_Window_01.jpg">source</a></li>
+    <li>UPVC Sash Window — Durajoin, CC BY 4.0 — <a href="https://commons.wikimedia.org/wiki/File:UPVC_Sash_Window.jpg">source</a></li>
+    <li>Motorische Hebeschiebetür — Gretsch-Unitas Content-Marketing, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Motorische-Hebeschiebet%C3%BCr.jpg">source</a></li>
+    <li>Espagnolette (Diderot, Encyclopédie, 1771, Pl. XXXIV) — public domain — <a href="https://commons.wikimedia.org/wiki/File:Espagnolette_(Diderot,_Encyclopedie,_Tafelbd.IX,_1771,_Tf._XXXIV).jpg">source</a></li>
+    <li>Espagnolette — Nerijp, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:Espagnolette.JPG">source</a></li>
+    <li>Fenstergriff Tensolock F 04 — Sandra Hässig, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Fenstergriff_Tensolock_F_04.jpg">source</a></li>
+  </ul>
+  <p><b>Drawings</b>: schematic diagrams drawn for this presentation (not to scale).</p>
+  <p><b>Reading / sources</b>:</p>
+  <ul>
+    <li>Liniar — multi-chambered profiles: <a href="https://www.liniar.co.uk/articles/multi-chambered-profiles-the-science-bit">liniar.co.uk</a></li>
+    <li>uPVC windows in India guide: <a href="https://www.studiomatrx.org/guides/upvc-windows-india">studiomatrx.org</a></li>
+    <li>aluplast energeto 4000 (steel-free): <a href="https://www.aluplast.net/au/produkte/fenster/energeto/energeto-4000/">aluplast.net</a></li>
+    <li>Schüco CT 70 AS / LivIng 82: <a href="https://schueco.com/de-en/architects/products/windows/pvc-u/ct-70-as">schueco.com</a></li>
+    <li>Window mechanisms (espagnolette, friction stays): <a href="https://www.homesecureshop.co.uk/blogs/news/how-to-choose-the-right-window-mechanism-friction-stays-espagnolette">homesecureshop.co.uk</a></li>
+    <li>uPVC vs aluminium vs timber: <a href="https://www.barbourproductsearch.info/advantages-and-disadvantages-of-timber-aluminium-blog000403.html">Barbour</a>, <a href="https://archipro.co.nz/article/warm-windows-why-upvc-is-the-best-option-for-your-passive-house-warm-windows">ArchiPro</a></li>
+    <li>Gaps around windows, sealants: <a href="https://www.labcwarranty.co.uk/technical-blog/gaps-around-windows-sealants-and-finishing-trims">LABC Warranty</a></li>
+    <li>Installation guide: <a href="https://www.quickslide.co.uk/blog/quickslide/upvc-window-installation-guide/">Quickslide</a></li>
+    <li>Standards referenced: EN 12608 (profiles), EN 14351-1 (product standard), EN 12207/12208/12210 (air/water/wind), EN 1627 (burglar resistance), PAS 24 (UK).</li>
+  </ul>
+  <p style="text-align:right"><button onclick="document.getElementById('credits').classList.remove('on')">Close (Esc)</button></p>
+</div></div>
+
+<script>
+/* ---------- diagram generators ---------- */
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;parent&&parent.appendChild(e);return e}
+const INK='#1f2a44';
+function win(g,x,y,w,h){el('rect',{x,y,width:w,height:h,fill:'#fff',stroke:INK,'stroke-width':4},g);el('rect',{x:x+10,y:y+10,width:w-20,height:h-20,fill:'#dcecf7',stroke:INK},g)}
+function tri(g,pts,dash){el('polyline',{points:pts.map(p=>p.join(',')).join(' '),fill:'none',stroke:INK,'stroke-width':1.6,'stroke-dasharray':dash||''},g)}
+function arrow(g,x1,y1,x2,y2){el('line',{x1,y1,x2,y2,stroke:'#b3121b','stroke-width':3,'marker-end':'url(#arr)'},g)}
+function label(g,x,y,t,s){el('text',{x,y,'text-anchor':'middle',class:'lbl',style:'font-size:'+(s||15)+'px;font-weight:600'},g,t)}
+
+(function types(){
+  const s=document.getElementById('typesGrid');const W=170,H=170,cw=200,ch=230;
+  const list=[
+   ['Fixed',(g,x,y,w,h)=>{label(g,x+w/2,y+h/2+5,'FIXED',13)}],
+   ['Side-hung casement',(g,x,y,w,h)=>tri(g,[[x+w-10,y+10],[x+10,y+h/2],[x+w-10,y+h-10]])],
+   ['Top-hung',(g,x,y,w,h)=>tri(g,[[x+10,y+h-10],[x+w/2,y+10],[x+w-10,y+h-10]])],
+   ['Bottom-hung (hopper)',(g,x,y,w,h)=>tri(g,[[x+10,y+10],[x+w/2,y+h-10],[x+w-10,y+10]],'6 5')],
+   ['Tilt & turn',(g,x,y,w,h)=>{tri(g,[[x+w-10,y+10],[x+10,y+h/2],[x+w-10,y+h-10]],'6 5');tri(g,[[x+10,y+10],[x+w/2,y+h-10],[x+w-10,y+10]],'2 4')}],
+   ['Horizontal sliding',(g,x,y,w,h)=>{el('line',{x1:x+w/2,y1:y+10,x2:x+w/2,y2:y+h-10,stroke:INK,'stroke-width':3},g);arrow(g,x+30,y+h/2,x+w/2-12,y+h/2);label(g,x+w*.75,y+h/2+5,'fixed',12)}],
+   ['Vertical sliding sash',(g,x,y,w,h)=>{el('line',{x1:x+10,y1:y+h/2,x2:x+w-10,y2:y+h/2,stroke:INK,'stroke-width':3},g);arrow(g,x+w/2,y+h-22,x+w/2,y+h/2+12);arrow(g,x+w/2,y+22,x+w/2,y+h/2-12)}],
+   ['Pivot (centre-hung)',(g,x,y,w,h)=>{el('line',{x1:x+4,y1:y+h/2,x2:x+w-4,y2:y+h/2,stroke:'#b3121b','stroke-width':2,'stroke-dasharray':'10 4 2 4'},g);el('circle',{cx:x+6,cy:y+h/2,r:5,fill:'#b3121b'},g);el('circle',{cx:x+w-6,cy:y+h/2,r:5,fill:'#b3121b'},g);tri(g,[[x+10,y+10],[x+10,y+h/2],[x+w-10,y+10]],'6 5');tri(g,[[x+10,y+h-10],[x+w-10,y+h/2],[x+w-10,y+h-10]])}],
+  ];
+  list.forEach(([name,fn],i)=>{const x=15+(i%4)*cw,y=10+Math.floor(i/4)*ch;const g=el('g',{},s);win(g,x,y,W,H);fn(g,x,y,W,H);label(g,x+W/2,y+H+28,name,16)});
+})();
+
+(function doors(){
+  const s=document.getElementById('doorsGrid');const ch=225;
+  function door(g,x,y,w,h){el('rect',{x,y,width:w,height:h,fill:'#fff',stroke:INK,'stroke-width':4},g);el('rect',{x:x+9,y:y+9,width:w-18,height:h-18,fill:'#dcecf7',stroke:INK},g)}
+  // French doors
+  let g=el('g',{},s);door(g,20,20,80,170);door(g,100,20,80,170);
+  tri(g,[[91,29],[29,105],[91,181]]);tri(g,[[109,29],[171,105],[109,181]]);label(g,100,215,'French doors (pair)',16);
+  // sliding patio
+  g=el('g',{},s);door(g,220,20,90,170);door(g,300,20,90,170);arrow(g,240,105,300,105);label(g,305,215,'Sliding patio (in-line)',16);
+  // lift & slide
+  g=el('g',{},s);door(g,420,20,95,170);door(g,505,20,95,170);arrow(g,440,105,500,105);arrow(g,465,170,465,138);label(g,510,215,'Lift & slide',16);
+  label(g,490,162,'lift',12);
+  // entrance
+  g=el('g',{},s);el('rect',{x:640,y:20,width:110,height:170,fill:'#f1f3f6',stroke:INK,'stroke-width':4},g);
+  el('rect',{x:656,y:36,width:78,height:60,fill:'#dcecf7',stroke:INK},g);
+  [40,75,105,140,175].forEach(yy=>el('circle',{cx:738,cy:yy,r:4.5,fill:'#b3121b'},g));el('rect',{x:722,y:100,width:8,height:30,rx:3,fill:INK},g);
+  label(g,695,215,'Entrance (multipoint)',16);
+  // bi-fold elevation + plan
+  g=el('g',{transform:'translate(0,30)'},s);for(let i=0;i<4;i++)door(g,20+i*70,250,70,150);
+  el('polyline',{points:'40,440 75,415 110,440 145,415 180,440 215,415 250,440 285,415',fill:'none',stroke:'#b3121b','stroke-width':3},g);
+  label(g,160,412,'',14);el('text',{x:20,y:458,class:'lbl',style:'font-size:13px'},g,'plan: panels fold & stack to one side');
+  label(g,160,240,'Bi-fold / slide & fold',16);
+  // tilt & slide
+  g=el('g',{transform:'translate(0,30)'},s);door(g,330,250,100,150);door(g,420,250,100,150);
+  tri(g,[[339,259],[380,391],[421,259]],'6 5');arrow(g,355,325,420,325);label(g,425,240,'Tilt & slide (PSK)',16);
+  // threshold detail
+  g=el('g',{transform:'translate(0,30)'},s);el('rect',{x:570,y:330,width:200,height:20,fill:'#cfd6dd',stroke:INK},g);el('rect',{x:600,y:290,width:140,height:40,fill:'#fff',stroke:INK,'stroke-width':2},g);
+  el('path',{d:'M560 350 H780',stroke:INK},g);el('path',{d:'M760 330 V350',stroke:'#b3121b','stroke-width':2,'marker-start':'url(#arr)','marker-end':'url(#arr)'},g);
+  label(g,670,375,'low threshold ≈ 15–20 mm',14);label(g,670,240,'Threshold detail',16);
+})();
+
+(function tilt(){
+  const g=document.getElementById('tt');
+  const pos=[['Handle DOWN','closed & locked',0,null],['Handle SIDEWAYS','TURN — swings in like a door',90,'turn'],['Handle UP','TILT — top opens ~10–15 cm',180,'tilt']];
+  pos.forEach(([t,d,ang,mode],i)=>{
+    const x=20+i*260;const gg=el('g',{},g);
+    el('rect',{x,y:20,width:120,height:180,fill:'#fff',stroke:INK,'stroke-width':4},gg);el('rect',{x:x+10,y:30,width:100,height:160,fill:'#dcecf7',stroke:INK},gg);
+    if(mode==='turn')tri(gg,[[x+110,30],[x+10,110],[x+110,190]],'6 5');
+    if(mode==='tilt')tri(gg,[[x+10,30],[x+60,190],[x+110,30]],'6 5');
+    if(!mode)el('text',{x:x+60,y:115,'text-anchor':'middle',style:'font-size:30px'},gg,'🔒');
+    const hx=x+170,hy=95;el('circle',{cx:hx,cy:hy,r:44,fill:'none',stroke:'#c8d3df','stroke-width':2},gg);
+    const h=el('g',{transform:`rotate(${ang} ${hx} ${hy})`},gg);el('rect',{x:hx-9,y:hy-9,width:18,height:18,rx:4,fill:INK},h);el('rect',{x:hx-5,y:hy,width:10,height:44,rx:5,fill:'#b3121b'},h);
+    el('text',{x:x+100,y:235,'text-anchor':'middle',class:'lbl',style:'font-weight:700;font-size:16px'},gg,t);
+    el('text',{x:x+100,y:258,'text-anchor':'middle',class:'lbl',style:'font-size:14px'},gg,d);
+  });
+})();
+
+/* ---------- camera & steps ---------- */
+const world=document.getElementById('world'), vp=document.getElementById('viewport');
+const W=7600,H=3600;
+const clusters=[...document.querySelectorAll('.cluster')];
+const maxStep=Math.max(...clusters.map(c=>+c.dataset.step));
+const steps=[{name:'The investigation wall',overview:true}];
+for(let i=1;i<=maxStep;i++){const c=clusters.find(c=>+c.dataset.step===i);steps.push({name:c.dataset.name,n:i})}
+steps.push({name:'Case closed — the whole picture',overview:true,final:true});
+let cur=0,zoomed=null;
+
+function itemBox(it){const c=it.parentElement;return{x:c.offsetLeft+it.offsetLeft,y:c.offsetTop+it.offsetTop,w:it.offsetWidth,h:it.offsetHeight}}
+function stepBox(n){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;
+  clusters.filter(c=>+c.dataset.step===n).forEach(c=>c.querySelectorAll('.item').forEach(it=>{const b=itemBox(it);x1=Math.min(x1,b.x);y1=Math.min(y1,b.y);x2=Math.max(x2,b.x+b.w);y2=Math.max(y2,b.y+b.h)}));
+  return{x:x1,y:y1,w:x2-x1,h:y2-y1}}
+function fit(b,pad=70){const vw=vp.clientWidth,vh=vp.clientHeight-50;
+  const s=Math.min(vw/(b.w+pad*2),vh/(b.h+pad*2));const tx=vw/2-(b.x+b.w/2)*s,ty=vh/2-(b.y+b.h/2)*s;
+  world.style.transform=`translate(${tx}px,${ty}px) scale(${s})`}
+function render(){
+  const st=steps[cur];zoomed=null;
+  if(st.overview)fit({x:0,y:0,w:W,h:H},20);else fit(stepBox(st.n));
+  clusters.forEach(c=>{const n=+c.dataset.step;c.classList.toggle('current',!st.overview&&n===st.n);
+    c.classList.toggle('future',!st.overview&&n>st.n)});
+  pinsvg.querySelectorAll('.pin').forEach(p=>p.style.opacity=(!st.overview&&+p.dataset.step>st.n)?.3:1);
+  strings.forEach(s=>{const show=st.final||(!st.overview&&s.step<=st.n);s.el.classList.toggle('hidden',!show)});
+  document.getElementById('ht').textContent=st.name;
+  document.getElementById('hc').textContent=`${cur} / ${steps.length-1}`;
+  document.getElementById('bar').style.width=(cur/(steps.length-1)*100)+'%';
+  try{localStorage.setItem('upvc-step',cur)}catch(e){}
+}
+function go(i){cur=Math.max(0,Math.min(steps.length-1,i));render()}
+
+/* ---------- strings ---------- */
+const svg=document.getElementById('strings'),pinsvg=document.getElementById('pins');let strings=[];
+function pinPos(it){const b=itemBox(it);return[b.x+b.w/2,b.y+16]}
+function buildStrings(){
+  svg.innerHTML='';pinsvg.innerHTML='';strings=[];
+  const title=document.getElementById('title');
+  const add=(a,b,step,cls)=>{const[p1,p2]=[pinPos(a),pinPos(b)];const dx=p2[0]-p1[0],dy=p2[1]-p1[1];const d=Math.hypot(dx,dy);
+    const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2+d*0.07;
+    const p=el('path',{d:`M${p1[0]},${p1[1]} Q${mx},${my} ${p2[0]},${p2[1]}`,class:cls||''},svg);
+    const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.setProperty('--len',len);p.style.strokeDashoffset=0;p.classList.add('hidden');
+    strings.push({el:p,step});};
+  clusters.forEach(c=>{const n=+c.dataset.step;const items=[...c.querySelectorAll('.item')];
+    const head=c.querySelector('.head')||items[0];
+    if(n===1){items.filter(i=>i!==title).forEach(i=>add(title,i,1,'thin'));return}
+    add(title,head,n);items.filter(i=>i!==head).forEach(i=>add(head,i,n,'thin'));});
+  const pins=['#d62828','#f4a261','#2a9d8f','#e9c46a','#457b9d','#ffffff'];let k=0;
+  document.querySelectorAll('.item').forEach(it=>{const[x,y]=pinPos(it);const col=pins[k++%pins.length];const pg=el('g',{'data-step':it.parentElement.dataset.step,class:'pin'},pinsvg);
+    el('circle',{cx:x+3,cy:y+5,r:11,fill:'rgba(0,0,0,.35)'},pg);el('circle',{cx:x,cy:y,r:11,fill:col,stroke:'rgba(0,0,0,.35)'},pg);el('circle',{cx:x-3.5,cy:y-3.5,r:3.5,fill:'rgba(255,255,255,.75)'},pg)});
+}
+
+/* ---------- input ---------- */
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('credits').classList.contains('on')){if(e.key==='Escape'||e.key==='c'||e.key==='C')document.getElementById('credits').classList.remove('on');return}
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();if(zoomed)render();else go(cur+1)}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();if(zoomed)render();else go(cur-1)}
+  else if(e.key==='Escape'){render()}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(steps.length-1);
+  else if(e.key==='o'||e.key==='O'){zoomed='ov';fit({x:0,y:0,w:W,h:H},20)}
+  else if(e.key==='c'||e.key==='C')document.getElementById('credits').classList.add('on');
+  else if(e.key==='h'||e.key==='H')document.body.classList.toggle('clean');
+  else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+});
+document.querySelectorAll('.item').forEach(it=>it.addEventListener('click',e=>{
+  e.stopPropagation();if(zoomed===it){render();return}
+  const st=steps[cur];
+  // clicking a card in another cluster jumps the presentation there
+  const n=+it.parentElement.dataset.step;if(st.overview||n!==st.n){cur=n;render()}
+  zoomed=it;fit(itemBox(it),40);}));
+vp.addEventListener('click',()=>{if(zoomed)render()});
+document.getElementById('next').onclick=e=>{e.stopPropagation();go(cur+1)};
+document.getElementById('prev').onclick=e=>{e.stopPropagation();go(cur-1)};
+document.getElementById('cbtn').onclick=e=>{e.stopPropagation();document.getElementById('credits').classList.add('on')};
+window.addEventListener('resize',()=>{zoomed?fit(itemBox(zoomed),40):render()});
+window.addEventListener('load',()=>{buildStrings();const q=new URLSearchParams(location.search);
+  if(q.has("still"))document.body.classList.add("still");let s=q.has("step")?+q.get("step"):0;go(s);});
+</script>
+</body>
+</html>
