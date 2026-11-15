@@ -8,15 +8,16 @@ const css = `
 /* ================= WALL SCENE ================= */
 html,body{background:#cfc5b6}
 #world{background:none!important;box-shadow:none!important;width:7600px;height:3600px}
-#world::before{content:"";position:absolute;left:-7000px;top:-6000px;width:22000px;height:16000px;z-index:-3;
-  background-color:#8a4a32;
-  background-image:
-    radial-gradient(ellipse 22% 26% at 30% 46%, rgba(255,235,205,.18), rgba(255,235,205,0) 70%),
-    linear-gradient(to bottom, rgba(25,12,6,.45), rgba(25,12,6,0) 30%, rgba(25,12,6,0) 62%, rgba(25,12,6,.38) 66.5%),
-    radial-gradient(ellipse 34% 30% at 49% 48%, rgba(0,0,0,0) 45%, rgba(20,10,5,.42)),
-    url("tex/bricks.jpg");
-  background-size:auto,auto,auto,5200px 5200px;
-  background-position:0 0,0 0,0 0,1200px 330px}
+#world::before{content:"";position:absolute;left:-14000px;top:-9000px;width:30000px;height:20000px;z-index:-3;
+  background-color:#8a4a32;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712000%27 height=%278000%27%3E%3Cfilter id=%27v%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.00035%27 numOctaves=%273%27 seed=%2711%27/%3E%3CfeColorMatrix values=%270 0 0 0 .18 0 0 0 0 .08 0 0 0 0 .03 0 0 0 1.1 -.35%27/%3E%3C/filter%3E%3Crect width=%2712000%27 height=%278000%27 filter=%27url(%23v)%27/%3E%3C/svg%3E"),url("tex/bricks.jpg"),url("tex/bricks.jpg");background-size:12000px 8000px,5200px 5200px,7300px 7300px;background-position:0 0,1200px 330px,3100px 2200px;background-blend-mode:normal,normal,normal}
+#ceiling{left:-14000px;top:-9000px;width:30000px;height:6130px;z-index:-2;background:linear-gradient(#f6f3ee,#e4dfd7 85%,#d6d0c6)}
+#cornice{left:-14000px;top:-2960px;width:30000px;height:140px;z-index:-2;background:linear-gradient(#ffffff,#ece7df 55%,#d9d3c9);box-shadow:0 40px 90px rgba(30,15,5,.35)}
+#wallshade{left:-14000px;top:-2870px;width:30000px;height:9700px;z-index:-2;
+  background:linear-gradient(to bottom,rgba(25,12,6,.38),rgba(25,12,6,.08) 20%,rgba(25,12,6,0) 45%,rgba(25,12,6,.05) 80%,rgba(25,12,6,.3)),
+  linear-gradient(to right,rgba(25,12,6,.25),rgba(25,12,6,0) 20%,rgba(25,12,6,0) 80%,rgba(25,12,6,.3)),
+  radial-gradient(ellipse 3200px 4200px at 9300px 4000px,rgba(255,240,220,.16),rgba(255,240,220,0) 70%),
+  linear-gradient(rgba(70,50,40,.12),rgba(70,50,40,.12))}
+#window{left:-8000px;top:-1400px;width:5400px;height:5500px;z-index:-2}
 #world::after{content:none;
   background-image:
     radial-gradient(ellipse 60% 45% at 52% 38%, rgba(255,250,240,.55), rgba(255,250,240,0) 70%),
@@ -31,7 +32,7 @@ html,body{background:#cfc5b6}
     repeating-linear-gradient(90deg,#b98a5c 0 260px,#a97a4e 260px 520px,#c39466 520px 780px,#ad7f52 780px 1040px);}
 #floorold::after{content:"";position:absolute;inset:0;opacity:.35;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .09' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .13 0 0 0 0 .05 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='400' height='120' filter='url(%23f)'/%3E%3C/svg%3E");background-size:1600px 480px}
-#skirting{left:-7000px;top:4400px;width:22000px;height:170px;z-index:-2;background:linear-gradient(#f4efe7,#e6dfd3 70%,#cfc6b8);box-shadow:0 -6px 18px rgba(80,60,30,.12)}
+#skirting{left:-14000px;top:6670px;width:30000px;height:170px;z-index:-2;background:linear-gradient(#f4efe7,#e6dfd3 70%,#cfc6b8);box-shadow:0 -6px 18px rgba(80,60,30,.12)}
 
 /* the board */
 #board{position:absolute;left:-230px;top:-230px;width:8060px;height:4060px;z-index:-1;border-radius:14px;
@@ -54,8 +55,8 @@ html,body{background:#cfc5b6}
 #gobo{left:-5200px;top:-2600px;width:5600px;height:7600px;z-index:2;transform:skewX(-22deg) rotate(3deg);
   filter:blur(34px);mix-blend-mode:screen;transition:opacity 1.2s;opacity:.55}
 #gobo div{position:absolute;background:rgba(255,232,190,.75)}
-#plant{left:8150px;top:1650px;width:1500px;height:3150px;z-index:1}
-#basket{left:-2050px;top:2950px;width:1100px;height:1750px;z-index:1}
+#plant{left:8700px;top:3800px;width:1500px;height:3150px;z-index:1}
+#basket{left:-2150px;top:5180px;width:1100px;height:1750px;z-index:1}
 #label{position:absolute;left:8230px;top:250px;width:1050px;background:#faf7f1;padding:60px 60px 54px;z-index:1;
   box-shadow:0 22px 40px rgba(60,40,20,.25);font-family:var(--type);pointer-events:none}
 #label h4{font-size:30px;letter-spacing:.3em;color:#9a3b2b;margin:0 0 26px}
@@ -136,14 +137,57 @@ const basket = `<svg class="scene" id="basket" viewBox="0 0 1100 1750">
   <g><rect x="640" y="160" width="100" height="1200" rx="50" fill="#f6e7c8" transform="rotate(16 690 760)"/></g>
   <g><rect x="450" y="200" width="70" height="1150" rx="35" fill="#2b3f73" transform="rotate(-3 485 760)"/></g>
   <path d="M180 1000 H920 L860 1720 H240 Z" fill="url(#weave)"/><rect x="160" y="980" width="780" height="60" rx="30" fill="#a87c43"/></svg>`;
-let planks='';const VP=10800;const cols=['#b48557','#a67a4d','#bf8f60','#aa7d50','#b88a5a','#9f7347'];
-for(let i=-70;i<70;i++){const t1=VP+i*95,t2=VP+(i+1)*95,b1=VP+i*420,b2=VP+(i+1)*420;planks+=`<polygon points="${t1},0 ${t2},0 ${b2},2400 ${b1},2400" fill="${cols[(i*7+100)%cols.length]}" stroke="rgba(60,35,15,.45)" stroke-width="3"/>`;}
-for(let r=0;r<9;r++){const y=Math.round(1700*Math.pow(r/9,1.6));planks+=`<line x1="0" y1="${y}" x2="22000" y2="${y}" stroke="rgba(60,35,15,.0)" />`}
-const floor=`<svg class="scene" id="floor" viewBox="0 0 22000 2400" preserveAspectRatio="none" style="left:-7000px;top:4560px;width:22000px;height:2400px;z-index:-2">
-<defs><linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2210" stop-opacity=".55"/><stop offset=".35" stop-color="#3a2210" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient>
-<radialGradient id="sheen" cx=".3" cy=".25" r=".35"><stop offset="0" stop-color="#ffe9c6" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9c6" stop-opacity="0"/></radialGradient>
-<filter id="grain" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency=".002 .06" numOctaves="3" seed="5"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .1 0 0 0 0 .03 0 0 0 .45 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
-${planks}<rect width="22000" height="2400" filter="url(#grain)" fill="#000"/><rect width="22000" height="2400" fill="url(#fl)"/><rect width="22000" height="2400" fill="url(#sheen)"/></svg>`;
+let planks='';const VP=15000,FW=30000,FH=3300;const cols=['#b48557','#a67a4d','#bf8f60','#aa7d50','#b88a5a','#9f7347'];
+for(let i=-150;i<150;i++){const t1=VP+i*105,t2=VP+(i+1)*105,b1=VP+i*470,b2=VP+(i+1)*470;planks+=`<polygon points="${t1},0 ${t2},0 ${b2},${FH} ${b1},${FH}" fill="${cols[(i*7+300)%cols.length]}" stroke="rgba(60,35,15,.4)" stroke-width="3"/>`;}
+const floor=`<svg class="scene" id="floor" viewBox="0 0 ${FW} ${FH}" preserveAspectRatio="none" style="left:-14000px;top:6830px;width:${FW}px;height:${FH}px;z-index:-2">
+<defs><linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1608" stop-opacity=".6"/><stop offset=".3" stop-color="#2a1608" stop-opacity=".15"/><stop offset="1" stop-color="#2a1608" stop-opacity=".05"/></linearGradient>
+<filter id="grain" x="0" y="0" width="1" height="1"><feTurbulence type="fractalNoise" baseFrequency=".002 .06" numOctaves="3" seed="5"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .1 0 0 0 0 .03 0 0 0 .45 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="60"/></filter></defs>
+${planks}<rect width="${FW}" height="${FH}" filter="url(#grain)" fill="#000"/><rect width="${FW}" height="${FH}" fill="url(#fl)"/>
+<g filter="url(#soft)" opacity=".28"><polygon points="6300,0 10900,0 14600,3300 7600,3300" fill="#fff4dd"/><polygon points="8540,0 8700,0 11200,3300 10700,3300" fill="#7a5233" opacity=".5"/></g></svg>`;
+const ceiling='<div class="scene" id="ceiling"></div><div class="scene" id="cornice"></div><div class="scene" id="wallshade"></div>';
+const pane=(x1,y1,x2,y2)=>`<rect x="${x1}" y="${y1}" width="${x2-x1}" height="${y2-y1}" fill="none" stroke="#2b2b2b" stroke-width="10"/>
+  <polygon points="${x1+(x2-x1)*.15},${y1} ${x1+(x2-x1)*.42},${y1} ${x1+(x2-x1)*.05},${y2} ${x1-(x2-x1)*.22},${y2}" fill="#fff" opacity=".10" clip-path="url(#gl)"/>
+  <polygon points="${x1+(x2-x1)*.55},${y1} ${x1+(x2-x1)*.62},${y1} ${x1+(x2-x1)*.3},${y2} ${x1+(x2-x1)*.23},${y2}" fill="#fff" opacity=".08" clip-path="url(#gl)"/>`;
+const sash=(x1,y1,x2,y2,hx)=>`<path d="M${x1} ${y1}H${x2}V${y2}H${x1}Z M${x1+190} ${y1+190}V${y2-190}H${x2-190}V${y1+190}Z" fill="url(#pvc)" fill-rule="evenodd" stroke="rgba(0,0,0,.18)" stroke-width="6"/>
+  <rect x="${x1+120}" y="${y1+120}" width="${x2-x1-240}" height="${y2-y1-240}" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="5"/>
+  ${pane(x1+190,y1+190,x2-190,y2-190)}
+  <g transform="translate(${hx} ${(y1+y2)/2})"><rect x="-40" y="-90" width="80" height="190" rx="30" fill="#f7f7f5" stroke="rgba(0,0,0,.25)" stroke-width="5"/><rect x="-26" y="-20" width="52" height="420" rx="26" fill="#fbfbfa" stroke="rgba(0,0,0,.28)" stroke-width="5"/><rect x="-8" y="10" width="10" height="360" rx="5" fill="rgba(0,0,0,.06)"/></g>`;
+const win=`<svg class="scene" id="window" viewBox="-200 -100 5400 5500">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9dbe8"/><stop offset=".5" stop-color="#eef3f5"/><stop offset="1" stop-color="#f6f6f2"/></linearGradient>
+ <linearGradient id="pvc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbfbf9"/><stop offset="1" stop-color="#e9e8e3"/></linearGradient>
+ <linearGradient id="rev" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9d2c6"/><stop offset="1" stop-color="#f3efe8"/></linearGradient>
+ <linearGradient id="soff" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bdb5a8"/><stop offset="1" stop-color="#d9d2c6"/></linearGradient>
+ <linearGradient id="sillsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0d05" stop-opacity=".45"/><stop offset="1" stop-color="#1a0d05" stop-opacity="0"/></linearGradient>
+ <linearGradient id="headsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+ <filter id="far" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="55"/></filter>
+ <clipPath id="gl"><rect x="260" y="160" width="4730" height="4820"/></clipPath>
+</defs>
+<polygon points="0,0 5000,0 4990,160 260,160" fill="url(#soff)"/>
+<polygon points="0,0 260,160 260,4980 0,5130" fill="url(#rev)"/>
+<g clip-path="url(#gl)"><g filter="url(#far)">
+ <rect x="200" y="100" width="4900" height="5000" fill="url(#sky)"/>
+ <path d="M200 2900 L700 2500 L1100 2700 L1700 2150 L2200 2600 L2700 2350 L3300 2750 L3900 2200 L4500 2650 L5100 2450 V3400 H200Z" fill="#c6d0d8"/>
+ <path d="M1500 2330 L1700 2150 L1900 2320 L1800 2300 L1700 2360Z M3700 2380 L3900 2200 L4100 2370 L3950 2350Z" fill="#eef2f4"/>
+ <path d="M200 3250 Q600 3050 1000 3200 T1800 3150 T2700 3220 T3600 3120 T4500 3230 T5100 3150 V4000 H200Z" fill="#a9b49d"/>
+ <g fill="#8e9c84"><ellipse cx="900" cy="3350" rx="420" ry="520"/><ellipse cx="1500" cy="3450" rx="300" ry="420"/><ellipse cx="3800" cy="3380" rx="480" ry="560"/><ellipse cx="4500" cy="3500" rx="330" ry="420"/></g>
+ <rect x="200" y="3800" width="4900" height="1300" fill="#c8c8bb"/>
+ <path d="M2100 3700 H3300 V4300 H2100Z" fill="#e6dfd3"/><path d="M2000 3720 L2700 3350 L3400 3720Z" fill="#b89a8c"/>
+</g></g>
+<path d="M260 160H4990V4980H260Z M480 380V4760H4770V380Z" fill="url(#pvc)" fill-rule="evenodd" stroke="rgba(0,0,0,.2)" stroke-width="6"/>
+<rect x="2180" y="250" width="900" height="44" rx="14" fill="#d8d7d1"/>
+<rect x="480" y="1450" width="4290" height="160" fill="url(#pvc)" stroke="rgba(0,0,0,.18)" stroke-width="5"/>
+<rect x="2560" y="1610" width="130" height="3150" fill="url(#pvc)" stroke="rgba(0,0,0,.18)" stroke-width="5"/>
+<rect x="540" y="440" width="4170" height="950" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="5"/>
+${pane(600,500,4650,1330)}
+${sash(480,1610,2560,4760,2460)}
+${sash(2690,1610,4770,4760,2790)}
+<rect x="260" y="160" width="4730" height="420" fill="url(#headsh)"/>
+<polygon points="260,4980 4990,4980 5150,5180 -150,5180" fill="#f4f1eb"/>
+<rect x="-150" y="5180" width="5300" height="80" fill="#dcd6cb"/>
+<rect x="-150" y="5260" width="5300" height="110" fill="url(#sillsh)"/>
+</svg>`;
 const gobo = `<div class="scene" id="gobo">
   <div style="left:0;top:0;width:2650px;height:3600px"></div><div style="left:2950px;top:0;width:2650px;height:3600px"></div>
   <div style="left:0;top:3900px;width:2650px;height:3700px"></div><div style="left:2950px;top:3900px;width:2650px;height:3700px"></div></div>`;
@@ -156,7 +200,7 @@ const js = `
 /* ================= WALL + BOARD LOGIC ================= */
 const world=document.getElementById('world'),vp=document.getElementById('viewport'),hint=document.getElementById('hint');
 const clusters=[...document.querySelectorAll('.cluster')].sort((a,b)=>a.dataset.step-b.dataset.step);
-const WALL={x:-2350,y:-1300,w:11900,h:6600}, BOARD={x:-260,y:-260,w:8120,h:4120};
+const WALL={x:-10150,y:-3900,w:22100,h:12430}, BOARD={x:-260,y:-260,w:8120,h:4120};
 let phase='wall', zoomedOn=null, lockUntil=0;
 const svg=document.getElementById('strings'),pinsvg=document.getElementById('pins');
 const NSs='http://www.w3.org/2000/svg';
@@ -281,15 +325,13 @@ ${css}
     <filter id="rough" filterUnits="userSpaceOnUse" x="-3000" y="-3000" width="14000" height="10000"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="9"/></filter>
   </defs>
 </svg>
+${ceiling}
+${win}
 ${floor}<div class="scene" id="skirting"></div>
-${gobo}
 <div id="board"><div class="face"></div><div class="brand">CASE · BOARD</div></div>
 ${tray}
-${lamp}
-<div class="scene" id="cone"></div>
 ${plant}
 ${basket}
-${label}
 <svg id="strings" width="7600" height="3600"></svg>
 
 ${clusters}
@@ -315,7 +357,7 @@ ${js}
 </html>
 `;
 // ---- scene bake page: only the room, fixed camera ----
-const S={x:-4000,y:-2600,w:15000,h:9000,k:0.42};
+const S={x:-13000,y:-6000,w:28000,h:16000,k:0.25};
 const wallVer = (await import('crypto')).createHash('md5').update(fs.readFileSync(new URL('../img/wall.jpg', import.meta.url))).digest('hex').slice(0,8);
 const bake = html.replace('</style>',`
 #world{transform:translate(${-S.x*S.k}px,${-S.y*S.k}px) scale(${S.k})!important;transition:none!important}
