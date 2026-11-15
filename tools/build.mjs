@@ -86,8 +86,14 @@ body.zoomed #gobo, body.zoomed #cone{opacity:0}
 .cluster.shown{pointer-events:auto}
 .cluster.shown .item{opacity:1;transform:rotate(var(--r,0deg))}
 .cluster.shown .item:hover{box-shadow:4px 18px 30px rgba(40,40,60,.3)}
-#strings path{stroke:#2b3f73!important;stroke-width:10!important;opacity:.75;filter:none!important;stroke-linejoin:round;transition:stroke-dashoffset 1.2s ease-in-out!important}
-#strings path.hidden{stroke-dashoffset:var(--len)!important}
+#strings path{fill:none!important;filter:none!important;stroke-linecap:round;transition:stroke-dashoffset 1.1s ease-in-out var(--d,0s)!important}
+#strings .thread path{stroke-dashoffset:var(--len)}
+#strings .thread.on path{stroke-dashoffset:0}
+#strings .st{stroke:#a5141c!important}
+#strings .sh{stroke:rgba(40,20,10,.22)!important}
+#strings .thick path{stroke-width:3.4!important}
+#strings .thin path{stroke-width:2.3!important}
+#strings .thin .st{stroke:#7d1016!important}
 body.still #strings path,body.still #pins .pin{transition:none!important}
 #pins .pin{opacity:0;transform:translateY(-14px);transition:opacity .3s ease var(--d,0s),transform .45s cubic-bezier(.2,1.6,.4,1) var(--d,0s)}
 #pins .pin.on{opacity:1;transform:none}
@@ -185,29 +191,30 @@ clusters.forEach(c=>{
 const arrows=new Map();
 function buildMarks(){
   svg.innerHTML='';pinsvg.innerHTML='';
-  const title=document.getElementById('title');const tb=itemBox(title);
-  clusters.forEach(c=>{const items=[...c.querySelectorAll('.item')];
-    if(c.dataset.step!=='1'){const head=c.querySelector('.head')||items[0];const hb=itemBox(head);
-      const p1=[tb.x+tb.w/2+(hb.x+hb.w/2-tb.x-tb.w/2)*0.18,tb.y+tb.h/2+(hb.y-tb.y)*0.25];
-      const p2=[hb.x+hb.w/2+(tb.x-hb.x)*0.04,hb.y+hb.h/2];
-      const ax=p2[0]-p1[0],ay=p2[1]-p1[1],L=Math.hypot(ax,ay);
-      const mx=(p1[0]+p2[0])/2-ay*0.12,my=(p1[1]+p2[1])/2+ax*0.12;
-      const k=(L-260)/L;const end=[p1[0]+ax*k,p1[1]+ay*k];
-      let d='';for(let i=0;i<=28;i++){const t=i/28,u=1-t;const x=u*u*p1[0]+2*u*t*mx+t*t*end[0],y=u*u*p1[1]+2*u*t*my+t*t*end[1];const w=(t>0.05&&t<0.95)?Math.sin(i*1.7+L)*7:0;d+=(i?'L':'M')+(x+w).toFixed(1)+','+(y-w).toFixed(1);}
-      const p=mk('path',{d},svg);
-      const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.setProperty('--len',len);p.classList.add('hidden');arrows.set(c,p);}
-    const cols=['#d62828','#2b3f73','#f2b705','#1a1a1a','#2a9d8f'];
-    items.forEach((it,i)=>{const b=itemBox(it);const g=mk('g',{class:'pin'},pinsvg);g.style.setProperty('--d',(i*0.22+0.25)+'s');
-      const col=cols[(i+ +c.dataset.step)%cols.length];
-      mk('circle',{cx:b.x+b.w/2+4,cy:b.y+20,r:22,fill:'rgba(0,0,0,.25)'},g);mk('circle',{cx:b.x+b.w/2,cy:b.y+14,r:22,fill:col},g);
-      mk('circle',{cx:b.x+b.w/2-7,cy:b.y+7,r:7,fill:'rgba(255,255,255,.55)'},g);
+  const title=document.getElementById('title');
+  const pinPos=it=>{const b=itemBox(it);return[b.x+b.w/2,b.y+16]};
+  const thread=(c,A,B,cls,delay)=>{const[p1,p2]=[pinPos(A),pinPos(B)];const d=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);
+    const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2+d*0.07;const dd='M'+p1[0]+','+p1[1]+' Q'+mx+','+my+' '+p2[0]+','+p2[1];
+    const g=mk('g',{class:'thread '+cls},svg);g.style.setProperty('--d',delay+'s');
+    mk('path',{d:dd,class:'sh',transform:'translate(3 7)'},g);const p=mk('path',{d:dd,class:'st'},g);
+    const len=p.getTotalLength();g.querySelectorAll('path').forEach(q=>{q.style.strokeDasharray=len;q.style.setProperty('--len',len)});
+    (c._threads=c._threads||[]).push(g);};
+  clusters.forEach(c=>{const items=[...c.querySelectorAll('.item')];const step=c.dataset.step;
+    items.forEach((it,i)=>it.style.setProperty('--d',(i*0.22)+'s'));
+    if(step==='1'){items.filter(i=>i!==title).forEach((it,i)=>thread(c,title,it,'thin',0.4+i*0.22));}
+    else{const head=c.querySelector('.head')||items[0];thread(c,title,head,'thick',0);
+      items.filter(i=>i!==head).forEach(it=>thread(c,head,it,'thin',parseFloat(it.style.getPropertyValue('--d'))+0.25));}
+    const cols=['#d62828','#f4a261','#2a9d8f','#e9c46a','#457b9d','#ffffff'];
+    items.forEach((it,i)=>{const[x,y]=pinPos(it);const g=mk('g',{class:'pin'},pinsvg);g.style.setProperty('--d',(i*0.22+0.2)+'s');
+      const col=cols[(i*2+ +step)%cols.length];
+      mk('circle',{cx:x+3,cy:y+5,r:11,fill:'rgba(0,0,0,.35)'},g);mk('circle',{cx:x,cy:y,r:11,fill:col,stroke:'rgba(0,0,0,.35)'},g);
+      mk('circle',{cx:x-3.5,cy:y-3.5,r:3.5,fill:'rgba(255,255,255,.75)'},g);
       (c._pins=c._pins||[]).push(g);});
   });
 }
 function reveal(c){if(c.classList.contains('shown'))return;c.classList.add('shown');zones.get(c).classList.add('gone');
-  (c._pins||[]).forEach(p=>p.classList.add('on'));
+  (c._pins||[]).forEach(p=>p.classList.add('on'));(c._threads||[]).forEach(t=>t.classList.add('on'));
   const s1=clusters[0];if(c!==s1&&!s1.classList.contains('shown'))reveal(s1);
-  const a=arrows.get(c);if(a){setTimeout(()=>a.classList.remove('hidden'),150);setTimeout(()=>a.setAttribute('marker-end','url(#mk)'),document.body.classList.contains('still')?0:1250)}
   setPhase(phase,zoomedOn);}
 function enterBoard(){fit(BOARD,20);setPhase('board');setTimeout(()=>reveal(clusters[0]),900)}
 function toWall(){fit(WALL,0);setPhase('wall')}
