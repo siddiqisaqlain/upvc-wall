@@ -309,6 +309,7 @@ ${js}
 `;
 // ---- scene bake page: only the room, fixed camera ----
 const S={x:-4000,y:-2600,w:15000,h:9000,k:0.42};
+const wallVer = (await import('crypto')).createHash('md5').update(fs.readFileSync(new URL('../img/wall.jpg', import.meta.url))).digest('hex').slice(0,8);
 const bake = html.replace('</style>',`
 #world{transform:translate(${-S.x*S.k}px,${-S.y*S.k}px) scale(${S.k})!important;transition:none!important}
 .cluster,.zone,#hud,#hint,#vignette,#bar,#strings,#pins,#credits{display:none!important}
@@ -323,6 +324,6 @@ html,body{background:#d6c9b6}
 #board .face,#board .brand,.scene,#label{display:none!important}
 #sceneimg{position:absolute;left:${S.x}px;top:${S.y}px;width:${S.w}px;height:${S.h}px;z-index:-2;pointer-events:none;user-select:none}
 </style>`)
-  .replace('<div id="board">','<img id="sceneimg" src="img/wall.jpg" alt="" draggable="false"><div id="board">');
+  .replace('<div id="board">','<img id="sceneimg" src="img/wall.jpg?v=${wallVer}" alt="" draggable="false"><div id="board">');
 fs.writeFileSync(new URL('../index.html', import.meta.url), light);
 console.log('built index.html', html.length, 'bytes');
