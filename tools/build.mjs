@@ -324,6 +324,6 @@ html,body{background:#d6c9b6}
 #board .face,#board .brand,.scene,#label{display:none!important}
 #sceneimg{position:absolute;left:${S.x}px;top:${S.y}px;width:${S.w}px;height:${S.h}px;z-index:-2;pointer-events:none;user-select:none}
 </style>`)
-  .replace('<div id="board">','<img id="sceneimg" src="img/wall.jpg?v=${wallVer}" alt="" draggable="false"><div id="board">');
+  .replace('<div id="board">',`<img id="sceneimg" src="img/wall.jpg?v=${wallVer}" alt="" draggable="false"><div id="board">`);
 fs.writeFileSync(new URL('../index.html', import.meta.url), light);
 console.log('built index.html', html.length, 'bytes');
