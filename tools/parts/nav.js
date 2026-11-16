@@ -14,6 +14,29 @@ const clusters=boards.flatMap(b=>b.clusters);
 const boardOf=c=>boards.find(b=>b.clusters.includes(c));
 let phase='wall', cur=boards[0], zoomedOn=null, lockUntil=0;
 
+/* The world stays hidden (body:not(.ready)) until everything has loaded; then the camera is placed on the wall
+   view with no animation. Placing it earlier left the big room image only partly painted. */
+let ready=false,doorQueued=false;
+/* opening scene: the front door */
+const intro=document.getElementById('intro');let introOn=!!intro;
+/* wall view, optionally pulled back by k (k<1 = room further away, as seen from outside the door) */
+function wallXf(k){const vw=vp.clientWidth,vh=vp.clientHeight-46,s=Math.max(vw/WALL.w,vh/WALL.h)*k;
+  return `translate(${vw/2-(WALL.x+WALL.w/2)*s}px,${vh/2-(WALL.y+WALL.h/2)*s}px) scale(${s})`}
+/* After the door scene the camera rests on the wall. Hovering a board only enters it once the mouse has
+   really moved (otherwise the cursor, already over a board, would fly straight into it). */
+let hoverArmed=!intro,armFrom=0,armDist=0,lastXY=null;
+document.addEventListener('mousemove',e=>{if(hoverArmed||!armFrom||Date.now()<armFrom){lastXY=[e.clientX,e.clientY];return}
+  if(lastXY)armDist+=Math.hypot(e.clientX-lastXY[0],e.clientY-lastXY[1]);lastXY=[e.clientX,e.clientY];if(armDist>60)hoverArmed=true});
+function openDoor(){if(!introOn||intro.classList.contains('open'))return;if(!ready){doorQueued=true;intro.classList.add('waiting');return}
+  /* through the open door the room is seen from further back… */
+  world.style.transition='none';world.style.transform=wallXf(.5);world.getBoundingClientRect();
+  intro.classList.add('open');
+  /* …then the camera walks in: door frame flies past, room comes up to the wall view and stops */
+  setTimeout(()=>{intro.classList.add('through');world.style.transition='transform 1.8s cubic-bezier(.45,0,.2,1)';world.style.transform=wallXf(1)},1150);
+  setTimeout(()=>{intro.remove();introOn=false;world.style.transition='';phase='wall';setPhase('wall');armFrom=Date.now()+300;lockUntil=Date.now()+600},3000)}
+if(intro){const q=new URLSearchParams(location.search);
+  if(q.has('still')||q.has('view')||q.has('nodoor')){intro.remove();introOn=false}else{intro.addEventListener('click',e=>{e.stopPropagation();openDoor()});if(q.has('autodoor'))setTimeout(openDoor,+q.get('autodoor')||500)}}
+
 function mk(tag,a,p){const e=document.createElementNS(NSs,tag);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e}
 function itemBox(it){const c=it.parentElement;return{x:c.offsetLeft+it.offsetLeft,y:c.offsetTop+it.offsetTop,w:it.offsetWidth,h:it.offsetHeight}}
 function clusterBox(c){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;c.querySelectorAll('.item').forEach(it=>{const b=itemBox(it);x1=Math.min(x1,b.x);y1=Math.min(y1,b.y);x2=Math.max(x2,b.x+b.w);y2=Math.max(y2,b.y+b.h)});return{x:x1,y:y1,w:x2-x1,h:y2-y1}}
@@ -38,12 +61,17 @@ clusters.forEach(c=>{
   z.innerHTML='<svg><rect x="0" y="0" width="100%" height="100%" rx="40"/></svg><div class="zt">'+
     (hero?'<b>'+c.dataset.kicker+'</b><span>'+c.dataset.big+'</span>':'<b>'+(rest.length?no:'✓')+'</b><span>'+title+'</span><em>hover to reveal</em>')+'</div>';
   world.appendChild(z);zones.set(c,z);
-  z.addEventListener('mouseenter',()=>{const bd=boardOf(c);if(phase==='wall'||bd!==cur){if(phase==='wall')enterBoard(bd);return}if(Date.now()<lockUntil)return;reveal(c)});
+  z.addEventListener('mouseenter',()=>{const bd=boardOf(c);if(phase==='wall'||bd!==cur){if(phase==='wall')wallHover(bd);return}if(Date.now()<lockUntil)return;reveal(c)});
+  z.addEventListener('mousemove',()=>{if(phase==='wall')wallHover(boardOf(c))});
   z.addEventListener('click',e=>{e.stopPropagation();const bd=boardOf(c);if(phase==='wall'||bd!==cur){enterBoard(bd);return}reveal(c);zoomZone(c)});
 });
 
 /* strings + pins */
 function buildMarks(){
+  /* threads are created hidden; without body.init every one of them would animate from 0 to hidden at load,
+     and that repaint storm stops the big room image from ever finishing painting */
+  document.body.classList.add('init');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('init')));
   boards.forEach(bd=>{bd.strings.innerHTML='';bd.pins.innerHTML='';
     const title=bd.hero.querySelector('.title');
     const pinPos=it=>{const b=itemBox(it);return[b.x+b.w/2,b.y+16]};
@@ -77,7 +105,8 @@ function toWall(){fit(WALL,0,1);setPhase('wall')}
 function zoomZone(c){cur=boardOf(c);reveal(c);fit(clusterBox(c),70);setPhase('zone',c)}
 function zoomItem(it){cur=boardOf(it.parentElement);fit(itemBox(it),40);setPhase('item',it)}
 
-boards.forEach(bd=>bd.el.addEventListener('mouseenter',()=>{if(phase==='wall')enterBoard(bd)}));
+function wallHover(bd){if(phase==='wall'&&!introOn&&hoverArmed&&Date.now()>lockUntil)enterBoard(bd)}
+boards.forEach(bd=>['mouseenter','mousemove'].forEach(ev=>bd.el.addEventListener(ev,()=>wallHover(bd))));
 document.querySelectorAll('.cluster .item').forEach(it=>it.addEventListener('click',e=>{e.stopPropagation();
   if(phase==='wall'){enterBoard(boardOf(it.parentElement));return}
   if(phase==='item'&&zoomedOn===it){zoomZone(it.parentElement);return}zoomItem(it)}));
@@ -90,6 +119,7 @@ function next(){if(phase==='wall'){enterBoard(boards[0]);return}
   if(c){const i=cur.clusters.indexOf(c);if(i>0&&i<cur.clusters.length-1){zoomZone(cur.clusters[i+1]);return}showBoard(cur);return}
   const nb=boards[boards.indexOf(cur)+1];if(nb)enterBoard(nb);else showBoard(cur)}
 document.addEventListener('keydown',e=>{
+  if(introOn){if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();openDoor()}return}
   const cr=document.getElementById('credits');if(cr.classList.contains('on')){if(['Escape','c','C'].includes(e.key))cr.classList.remove('on');return}
   if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
   else if(['ArrowLeft','PageUp','Backspace','Escape'].includes(e.key)){e.preventDefault();back()}
@@ -107,8 +137,12 @@ document.getElementById('cbtn').onclick=e=>{e.stopPropagation();document.getElem
 window.addEventListener('resize',()=>{if(phase==='wall')fit(WALL,0,1);else if(phase==='board')fit(cur.box,20);else if(phase==='zone')fit(clusterBox(zoomedOn),70);else fit(itemBox(zoomedOn),40)});
 window.addEventListener('load',()=>{buildMarks();const q=new URLSearchParams(location.search);
   if(q.has('still'))document.body.classList.add('still');
+  /* always start on the wall with no animation: animating away from the untransformed (scale 1) world
+     never paints — the room layer is far too big at that scale — and left the old opening stuck on "01 The material" */
+  world.style.transition='none';toWall();world.getBoundingClientRect();world.style.transition='';
+  document.body.classList.add('ready');ready=true;if(doorQueued)setTimeout(openDoor,150);
   const v=q.get('view'),bd=boards[(+q.get('b')||1)-1]||boards[0];
-  if(v==='board'){cur=bd;reveal(bd.hero);showBoard(bd)}
-  else if(v==='all'){cur=bd;bd.clusters.forEach(reveal);showBoard(bd)}
-  else if(v&&v.startsWith('zone')){zoomZone(bd.clusters[+v.slice(4)-1])}
-  else toWall();});
+  if(v)setTimeout(()=>{
+    if(v==='board'){cur=bd;reveal(bd.hero);showBoard(bd)}
+    else if(v==='all'){cur=bd;bd.clusters.forEach(reveal);showBoard(bd)}
+    else if(v.startsWith('zone')){zoomZone(bd.clusters[+v.slice(4)-1])}},q.has('still')?0:300);});

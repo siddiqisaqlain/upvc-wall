@@ -7,7 +7,7 @@ const guide = fs.readFileSync(new URL('./' + (process.env.GUIDE || 'guide.png'),
 { const fd = new FormData(); fd.append('image', new Blob([guide]), 'upvc_guide.png'); fd.append('overwrite', 'true');
   await fetch(API + '/upload/image', { method: 'POST', body: fd }); }
 
-const pos = process.env.TWO ? `RAW photo, straight-on frontal view of an industrial loft living room, back wall of pale grey limewashed concrete plaster with patchy texture and soft stains, ` +
+const pos = process.env.PROMPT || (process.env.TWO ? `RAW photo, straight-on frontal view of an industrial loft living room, back wall of pale grey limewashed concrete plaster with patchy texture and soft stains, ` +
  `two thin black picture frames with white mats hanging on the wall: a square frame on the left and a large wide frame in the middle, each with a slim black LED picture light bar above it, ` +
  `a bright white uPVC plastic casement window with white frames and a transom on the right of the wall, white window handles, deep window reveal, white window sill, daylight, ` +
  `a low walnut wood sideboard under the square frame with a ceramic vase and a few books, a low dark green velvet sofa under the wide frame, an antique red persian rug with an ornate medallion pattern and cream border on a polished grey concrete floor, a beige travertine stone cube coffee table on the rug, ` +
@@ -19,8 +19,8 @@ const pos = process.env.TWO ? `RAW photo, straight-on frontal view of an industr
  `a low dark green boucle modular sofa under the frame, an antique red persian rug with an ornate medallion pattern and cream border on a polished grey concrete floor, a beige travertine stone cube coffee table on the rug, ` +
  `potted monstera on a stool, tall bird of paradise plant in a black pot, a tall leaning floor mirror with a thin black frame, a stack of magazines on the floor, ` +
  `exposed metal conduit pipes along the concrete ceiling, black enamel industrial pendant lamps, warm interior light mixed with soft daylight, ` +
- `architectural interior photography, 24mm lens, eye level, natural shadows, highly detailed, photorealistic, 8k`;
-const neg = `cartoon, illustration, painting, render, cgi, 3d, drawing, sketch, lowres, blurry, distorted perspective, tilted, warped lines, people, person, text, watermark, logo, oversaturated, brick wall, black window frame, dark window frame, plants overlapping the frame`;
+ `architectural interior photography, 24mm lens, eye level, natural shadows, highly detailed, photorealistic, 8k`);
+const neg = process.env.NEG || `cartoon, illustration, painting, render, cgi, 3d, drawing, sketch, lowres, blurry, distorted perspective, tilted, warped lines, people, person, text, watermark, logo, oversaturated, brick wall, black window frame, dark window frame, plants overlapping the frame`;
 
 const g = {
   1: { class_type: 'CheckpointLoaderSimple', inputs: { ckpt_name: 'RealVisXL_V5.0_fp16.safetensors' } },

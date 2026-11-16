@@ -71,7 +71,9 @@ body.zoomed .glass{opacity:0}
 .strings .thick path{stroke-width:3.4!important}
 .strings .thin path{stroke-width:2.3!important}
 .strings .thin .st{stroke:#7d1016!important}
-body.still .strings path,body.still .pins .pin{transition:none!important}
+body.still .strings path,body.still .pins .pin,body.init .strings path,body.init .pins .pin{transition:none!important}
+/* threads are only drawn on a board; drawn over the whole room view they stop the room image from painting */
+body:not(.inboard) .strings,.strings .thread:not(.on){display:none}
 .pins .pin{opacity:0;transform:translateY(-14px);transition:opacity .3s ease var(--d,0s),transform .45s cubic-bezier(.2,1.6,.4,1) var(--d,0s)}
 .pins .pin.on{opacity:1;transform:none}
 .mpl .rod{animation:rod 5s ease-in-out infinite!important}.mpl .hdl{animation:hdl 5s ease-in-out infinite!important}
@@ -84,6 +86,24 @@ body.still .strings path,body.still .pins .pin{transition:none!important}
 .hwb .photo{padding:17px 17px 12px}.hwb .photo figcaption{font-size:24px;padding:12px 5px 3px}.hwb .photo figcaption small{font-size:14px}
 .hwb .sheet{padding:22px 25px 20px;background-size:25px 25px}.hwb .sheet h3{font-size:26px}.hwb .sheet .sub{font-size:21px}
 .hwb .title{padding:50px 58px 42px}.hwb .title .stamp{font-size:30px}.hwb .title h1{font-size:90px}.hwb .title p{font-size:32px}.hwb .title .meta{font-size:22px}
+
+/* opening scene: a uPVC front door, full screen; click → leaf swings in → camera goes through the doorway.
+   Leaf box = door-leaf.jpg cut from tools/room/door_mid.png (x 1088..1607, y 209..1500 of 2688x1536). */
+#intro{position:fixed;inset:0;z-index:30;overflow:hidden;cursor:pointer;transition:opacity 1.1s ease .2s}
+#intro .stage{position:absolute;left:50%;top:50%;width:max(100vw,175vh);height:max(57.143vw,100vh);transform:translate(-50%,-50%);
+  transform-origin:50.15% 55.66%;transition:transform 1.7s cubic-bezier(.55,0,.25,1);perspective:2200px;perspective-origin:50.15% 52%}
+#intro .wall{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;pointer-events:none;user-select:none}
+#intro .leaf{position:absolute;left:40.476%;top:13.607%;width:19.345%;height:84.115%;z-index:1;transform-style:preserve-3d;transform-origin:0 50%;
+  background:url(img/intro/door-leaf.jpg) center/100% 100%;transition:transform 1.5s cubic-bezier(.45,0,.2,1),filter 1.5s}
+#intro .leaf .edge{position:absolute;right:0;top:0;width:7%;height:100%;background:linear-gradient(90deg,#d9d9d4,#f4f4f1);transform-origin:100% 50%;transform:rotateY(-90deg)}
+#intro.open .leaf{transform:rotateY(80deg);filter:brightness(.8)}
+#intro.through .stage{transform:translate(-50%,-50%) scale(5)}
+#intro.through{opacity:0}
+body:not(.ready) #world{visibility:hidden}
+#intro.waiting .knock{opacity:.6}
+#intro .knock{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);z-index:3;background:rgba(31,42,68,.85);color:#fff;font:600 16px var(--body);
+  letter-spacing:.05em;padding:10px 22px;border-radius:30px;transition:opacity .4s;pointer-events:none}
+#intro.open .knock{opacity:0}
 
 #hint{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(31,42,68,.82);color:#fff;
   font:600 15px var(--body);letter-spacing:.04em;padding:9px 18px;border-radius:30px;transition:opacity .5s;pointer-events:none}
@@ -132,6 +152,7 @@ ${css}
 </style>
 </head>
 <body>
+<div id="intro" title="Click to open the door"><div class="stage"><div class="leaf"><i class="edge"></i></div><img class="wall" src="img/intro/door-wall.webp" alt="A white uPVC front door in a plaster wall" draggable="false"></div><div class="knock">click the door to enter</div></div>
 <div id="bar"></div>
 <div id="viewport">
 <div id="world">
@@ -183,7 +204,7 @@ const S = { x: -13000, y: -6000, w: 28000, h: 16000, k: 0.25 };
 const wallVer = (await import('crypto')).createHash('md5').update(fs.readFileSync(new URL('../img/wall.jpg', import.meta.url))).digest('hex').slice(0, 8);
 const bake = html.replace('</style>', `
 #world{transform:translate(${-S.x * S.k}px,${-S.y * S.k}px) scale(${S.k})!important;transition:none!important}
-.cluster,.zone,#hud,#hint,#vignette,#bar,.strings,.pins,.glass,#credits{display:none!important}
+.cluster,.zone,#hud,#hint,#vignette,#bar,.strings,.pins,.glass,#credits,#intro{display:none!important}
 </style>`).replace(/<script>[\s\S]*<\/script>/, '');
 fs.writeFileSync(new URL('./scene.html', import.meta.url), bake);
 // ---- light page: the room is one baked image ----
