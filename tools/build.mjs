@@ -2,7 +2,7 @@
 // usage: node tools/build.mjs   (run from the project folder)
 import fs from 'fs';
 const P = f => fs.readFileSync(new URL('./parts/' + f, import.meta.url), 'utf8');
-const baseCss = P('style.css'), credits = P('credits.html'), diagrams = P('diagrams.js'), nav = P('nav.js');
+const sfx = P('sfx.js'), notes = P('notes.js'), baseCss = P('style.css'), credits = P('credits.html'), diagrams = P('diagrams.js'), nav = P('nav.js');
 const hwClusters = P('hw-clusters.html'), upvcClusters = P('clusters.html');
 
 // Boards, in presenting order. The hardware frame matches tools/room/guide2.html (px 220..554, py 186..495).
@@ -93,6 +93,10 @@ body:not(.inboard) .strings,.strings .thread:not(.on){display:none}
 #intro .stage{position:absolute;left:50%;top:50%;width:max(100vw,175vh);height:max(57.143vw,100vh);transform:translate(-50%,-50%);
   transform-origin:50.15% 55.66%;transition:transform 1.7s cubic-bezier(.55,0,.25,1);perspective:2200px;perspective-origin:50.15% 52%}
 #intro .wall{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;pointer-events:none;user-select:none}
+/* spray-painted title on the wall left of the door (tools/intro/title.html → wall-title.png); multiply lets the plaster show through */
+#intro .graffiti{position:absolute;left:8.557%;top:44.27%;width:29.762%;z-index:3;pointer-events:none;user-select:none;mix-blend-mode:multiply;opacity:.93}
+/* narrower than 7:4 the stage is cropped at the sides; slide it right so the painted title stays in view */
+@media (max-aspect-ratio:7/4){#intro .stage{left:calc(50% + (175vh - 100vw) * .32)}}
 #intro .leaf{position:absolute;left:40.476%;top:13.607%;width:19.345%;height:84.115%;z-index:1;transform-style:preserve-3d;transform-origin:0 50%;
   background:url(img/intro/door-leaf.jpg) center/100% 100%;transition:transform 1.5s cubic-bezier(.45,0,.2,1),filter 1.5s}
 #intro .leaf .edge{position:absolute;right:0;top:0;width:7%;height:100%;background:linear-gradient(90deg,#d9d9d4,#f4f4f1);transform-origin:100% 50%;transform:rotateY(-90deg)}
@@ -105,7 +109,8 @@ body:not(.ready) #world{visibility:hidden}
   letter-spacing:.05em;padding:10px 22px;border-radius:30px;transition:opacity .4s;pointer-events:none}
 #intro.open .knock{opacity:0}
 
-#hint{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(31,42,68,.82);color:#fff;
+/* on-screen instruction hints switched off (user request) — the speaker notes (N) carry the guidance */
+#hint{display:none!important;position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(31,42,68,.82);color:#fff;
   font:600 15px var(--body);letter-spacing:.04em;padding:9px 18px;border-radius:30px;transition:opacity .5s;pointer-events:none}
 #vignette{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(50,30,10,.28))}
 #hud{background:linear-gradient(transparent,rgba(25,18,10,.75))}
@@ -152,7 +157,7 @@ ${css}
 </style>
 </head>
 <body>
-<div id="intro" title="Click to open the door"><div class="stage"><div class="leaf"><i class="edge"></i></div><img class="wall" src="img/intro/door-wall.webp" alt="A white uPVC front door in a plaster wall" draggable="false"></div><div class="knock">click the door to enter</div></div>
+<div id="intro"><div class="stage"><div class="leaf"><i class="edge"></i></div><img class="wall" src="img/intro/door-wall.webp" alt="A white uPVC front door in a plaster wall" draggable="false"><img class="graffiti" src="img/intro/wall-title.webp" alt="Market Survey, by Shahid Nazir Khan, spray-painted on the wall" draggable="false"></div></div>
 <div id="bar"></div>
 <div id="viewport">
 <div id="world">
@@ -187,12 +192,17 @@ ${BOARDS.map(glass).join('\n')}
   <button id="prev" title="Back (← / Esc)">◀</button>
   <span class="t" id="ht">—</span><span id="hc"></span>
   <button id="next" title="Next topic (→ / Space)">▶</button>
-  <span class="k">→ next · ← back · W wall · 1 / 2 boards · B board · A reveal all · C credits · F fullscreen · H hide bar</span>
+  <span class="k">→ next · ← back · W wall · N notes · P presenter · M sound · F fullscreen</span>
+  <button id="nbtn" title="Presenter notes (N) · P = notes in a separate window">Notes</button>
+  <button id="sbtn" title="Sound (M)">🔊</button>
   <button id="cbtn">Credits</button>
 </div>
 
+<aside id="notes"></aside>
 ${credits}
 <script>
+${sfx}
+${notes}
 ${diagrams}
 ${nav}
 </script>

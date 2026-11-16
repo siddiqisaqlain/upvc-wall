@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Spray-painted title for the door scene. Rendered once to img/intro/wall-title.png, then ffmpeg → wall-title.webp (transparent) by tools/intro/render.sh.
+     Look: stencil spray paint (refs wall/2.jpg, 3.jpg) + stencil byline. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Permanent+Marker&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:transparent}svg{display:block}</style></head><body>
+<svg width="1480" height="1100" viewBox="0 0 1480 1100">
+  <defs>
+    <!-- rough sprayed edge: displace the letters with fine noise -->
+    <filter id="spray" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <!-- overspray halo -->
+      <feGaussianBlur in="rough" stdDeviation="5" result="halo"/>
+      <feComponentTransfer in="halo" result="halo2"><feFuncA type="linear" slope=".38"/></feComponentTransfer>
+      <!-- patchy paint: knock out a few speckles -->
+      <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="3" seed="9" result="sp"/>
+      <feColorMatrix in="sp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.7 1.6" result="mask"/>
+      <feComposite in="rough" in2="mask" operator="in" result="patchy"/>
+      <feMerge><feMergeNode in="halo2"/><feMergeNode in="patchy"/></feMerge>
+    </filter>
+    <filter id="marker" x="-5%" y="-20%" width="110%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#spray)" fill="#141414" font-family="'Saira Stencil One'" text-anchor="start">
+    <text x="40" y="300" font-size="300" letter-spacing="4" textLength="1380" lengthAdjust="spacingAndGlyphs">MARKET</text>
+    <text x="40" y="630" font-size="300" letter-spacing="4" textLength="1380" lengthAdjust="spacingAndGlyphs">SURVEY</text>
+    <!-- paint drips -->
+    <path d="M318 300 q2 30 1 58 a5 5 0 0 1 -10 0 q-1 -28 1 -58z"/>
+    <path d="M1035 300 q2 18 1 34 a4.5 4.5 0 0 1 -9 0 q-1 -16 1 -34z"/>
+    <path d="M520 630 q2 24 1 46 a5 5 0 0 1 -10 0 q-1 -22 1 -46z"/>
+    <path d="M1238 630 q2 22 1 40 a4.5 4.5 0 0 1 -9 0 q-1 -20 1 -40z"/>
+  </g>
+
+  <!-- byline: same stencil spray, small and widely spaced to the width of the title, with an orange sprayed rule -->
+  <g filter="url(#spray)" fill="#e2491f"><rect x="44" y="712" width="210" height="14"/></g>
+  <g filter="url(#spray)" fill="#141414" font-family="'Saira Stencil One'">
+    <text x="44" y="836" font-size="80" textLength="1372" lengthAdjust="spacing">BY SHAHID NAZIR KHAN</text>
+  </g>
+
+  <!-- orange stencil arrow pointing to the door -->
+  <g filter="url(#spray)" fill="#e2491f">
+    <path d="M1040 960 h300 v-48 l110 92 l-110 92 v-48 h-300 z"/>
+  </g>
+</svg>
+</body></html>

@@ -27,9 +27,18 @@ function wallXf(k){const vw=vp.clientWidth,vh=vp.clientHeight-46,s=Math.max(vw/W
 let hoverArmed=!intro,armFrom=0,armDist=0,lastXY=null;
 document.addEventListener('mousemove',e=>{if(hoverArmed||!armFrom||Date.now()<armFrom){lastXY=[e.clientX,e.clientY];return}
   if(lastXY)armDist+=Math.hypot(e.clientX-lastXY[0],e.clientY-lastXY[1]);lastXY=[e.clientX,e.clientY];if(armDist>60)hoverArmed=true});
-function openDoor(){if(!introOn||intro.classList.contains('open'))return;if(!ready){doorQueued=true;intro.classList.add('waiting');return}
+/* fullscreen: browsers only allow it from a click or key press, so the first one (normally the door click) switches it on.
+   The walk-in waits for the fullscreen resize so the camera path is worked out for the final screen size. */
+let fsTried=false;
+function goFullscreen(){if(fsTried||document.fullscreenElement)return null;fsTried=true;const el=document.documentElement;
+  try{const p=el.requestFullscreen&&el.requestFullscreen();return p&&p.then?p:null}catch(e){return null}}
+document.addEventListener('pointerdown',()=>{if(!introOn)goFullscreen()},{capture:true,once:true});
+document.addEventListener('keydown',e=>{if(!introOn&&!/^[fF]$/.test(e.key))goFullscreen()},{capture:true,once:true});
+function openDoor(){if(!introOn||intro.classList.contains('open'))return;
+  const fs=goFullscreen();if(fs){fs.then(()=>setTimeout(openDoor,250),()=>openDoor());return}
+  if(!ready){doorQueued=true;intro.classList.add('waiting');return}
   /* through the open door the room is seen from further back… */
-  world.style.transition='none';world.style.transform=wallXf(.5);world.getBoundingClientRect();
+  SFX.door();world.style.transition='none';world.style.transform=wallXf(.5);world.getBoundingClientRect();
   intro.classList.add('open');
   /* …then the camera walks in: door frame flies past, room comes up to the wall view and stops */
   setTimeout(()=>{intro.classList.add('through');world.style.transition='transform 1.8s cubic-bezier(.45,0,.2,1)';world.style.transform=wallXf(1)},1150);
@@ -41,7 +50,10 @@ function mk(tag,a,p){const e=document.createElementNS(NSs,tag);for(const k in a)
 function itemBox(it){const c=it.parentElement;return{x:c.offsetLeft+it.offsetLeft,y:c.offsetTop+it.offsetTop,w:it.offsetWidth,h:it.offsetHeight}}
 function clusterBox(c){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;c.querySelectorAll('.item').forEach(it=>{const b=itemBox(it);x1=Math.min(x1,b.x);y1=Math.min(y1,b.y);x2=Math.max(x2,b.x+b.w);y2=Math.max(y2,b.y+b.h)});return{x:x1,y:y1,w:x2-x1,h:y2-y1}}
 function fit(b,pad=60,cover){const vw=vp.clientWidth,vh=vp.clientHeight-46;const s=Math[cover?'max':'min'](vw/(b.w+pad*2),vh/(b.h+pad*2));
-  world.style.transform=`translate(${vw/2-(b.x+b.w/2)*s}px,${vh/2-(b.y+b.h/2)*s}px) scale(${s})`;lockUntil=Date.now()+1300}
+  world.style.transform=`translate(${vw/2-(b.x+b.w/2)*s}px,${vh/2-(b.y+b.h/2)*s}px) scale(${s})`;lockUntil=Date.now()+1300;
+  /* camera glide sound: rising air moving in, falling air pulling back; silent for instant moves and resizes */
+  if(world.style.transition!=="none"&&!fitQuiet&&Math.abs(s/lastS-1)>.02)SFX.move(s>lastS?1:-1);lastS=s}
+let lastS=1,fitQuiet=false;
 function setHint(t){hint.textContent=t;hint.style.opacity=t?1:0}
 const shown=c=>c.classList.contains('shown');
 function setPhase(p,target){phase=p;zoomedOn=target||null;document.body.classList.toggle('inboard',p!=='wall');document.body.classList.toggle('zoomed',p==='zone'||p==='item');
@@ -50,7 +62,7 @@ function setPhase(p,target){phase=p;zoomedOn=target||null;document.body.classLis
   document.getElementById('hc').textContent=p==='wall'?`${boards.length} boards`:`${n} / ${cl.length} revealed`;
   document.getElementById('bar').style.width=(all/clusters.length*100)+'%';
   const nb=boards[boards.indexOf(cur)+1];
-  setHint(p==='wall'?'hover over a board to begin':p==='board'?(n<cl.length?'hover over a topic to reveal it · click to zoom in':(nb?'all evidence on this board · → next board':'all evidence on the board · click any card')):'click a card to read it · → next · Esc back to the board');}
+  setHint(p==='wall'?'hover over a board to begin':p==='board'?(n<cl.length?'hover over a topic to reveal it · click to zoom in':(nb?'all evidence on this board · → next board':'all evidence on the board · click any card')):'click a card to read it · → next · Esc back to the board');updateNotes()}
 
 /* zones */
 const zones=new Map();
@@ -95,7 +107,7 @@ function buildMarks(){
     });
   });
 }
-function reveal(c){if(shown(c))return;c.classList.add('shown');zones.get(c).classList.add('gone');
+function reveal(c){if(shown(c))return;SFX.pin((c._threads||[]).length>0);c.classList.add('shown');zones.get(c).classList.add('gone');
   (c._pins||[]).forEach(p=>p.classList.add('on'));(c._threads||[]).forEach(t=>t.classList.add('on'));
   const h=boardOf(c).hero;if(c!==h&&!shown(h))reveal(h);
   setPhase(phase,zoomedOn);}
@@ -129,12 +141,13 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='a'||e.key==='A'){cur.clusters.forEach(reveal);showBoard(cur)}
   else if(e.key==='r'||e.key==='R')location.reload();
   else if(e.key==='c'||e.key==='C')cr.classList.add('on');
+  else if(e.key==='m'||e.key==='M')toggleSound();
   else if(e.key==='h'||e.key==='H')document.body.classList.toggle('clean');
   else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
 document.getElementById('next').onclick=e=>{e.stopPropagation();next()};
 document.getElementById('prev').onclick=e=>{e.stopPropagation();back()};
 document.getElementById('cbtn').onclick=e=>{e.stopPropagation();document.getElementById('credits').classList.add('on')};
-window.addEventListener('resize',()=>{if(phase==='wall')fit(WALL,0,1);else if(phase==='board')fit(cur.box,20);else if(phase==='zone')fit(clusterBox(zoomedOn),70);else fit(itemBox(zoomedOn),40)});
+window.addEventListener('resize',()=>{if(introOn)return;fitQuiet=true;setTimeout(()=>fitQuiet=false,0);if(phase==='wall')fit(WALL,0,1);else if(phase==='board')fit(cur.box,20);else if(phase==='zone')fit(clusterBox(zoomedOn),70);else fit(itemBox(zoomedOn),40)});
 window.addEventListener('load',()=>{buildMarks();const q=new URLSearchParams(location.search);
   if(q.has('still'))document.body.classList.add('still');
   /* always start on the wall with no animation: animating away from the untransformed (scale 1) world
@@ -146,3 +159,36 @@ window.addEventListener('load',()=>{buildMarks();const q=new URLSearchParams(loc
     if(v==='board'){cur=bd;reveal(bd.hero);showBoard(bd)}
     else if(v==='all'){cur=bd;bd.clusters.forEach(reveal);showBoard(bd)}
     else if(v.startsWith('zone')){zoomZone(bd.clusters[+v.slice(4)-1])}},q.has('still')?0:300);});
+
+/* sound: soft tap when the pointer crosses a card on an open board; M or the speaker button mutes */
+document.querySelectorAll('.cluster .item').forEach(it=>it.addEventListener('mouseenter',()=>{if(phase!=='wall'&&!introOn&&shown(it.parentElement))SFX.tick()}));
+const sbtn=document.getElementById('sbtn');function showSound(){sbtn.textContent=SFX.muted?'🔇':'🔊';sbtn.title=SFX.muted?'Sound off (M)':'Sound on (M)'}
+function toggleSound(){SFX.toggle();showSound()}sbtn.onclick=e=>{e.stopPropagation();toggleSound()};showSound();
+
+/* ===== presenter notes: N = panel on this page, P = separate window (drag it to the laptop screen;
+   arrow keys pressed there drive this page too) ===== */
+var notesEl=document.getElementById('notes'),pw=null;
+function notesKey(){if(phase==='wall'||!cur)return'wall';if(phase==='board')return cur.id+':1';
+  const c=phase==='item'&&zoomedOn?zoomedOn.parentElement:zoomedOn;return c?c.dataset.board+':'+c.dataset.step:cur.id+':1'}
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function notesHtml(){const n=NOTES[notesKey()];if(!n)return'';
+  return`<h4>${esc(n.t)}</h4><div class="wk">Say</div><ol>${n.say.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`+
+    (n.terms?`<div class="wk">Words to know</div><dl>${n.terms.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`:'')}
+function updateNotes(){if(!notesEl)return;const h=notesHtml();notesEl.innerHTML=h;
+  if(pw&&!pw.closed){const b=pw.document.getElementById('pn');if(b){b.innerHTML=h;pw.document.title='Notes — '+(NOTES[notesKey()]||{}).t}}}
+function toggleNotes(){document.body.classList.toggle('notes');updateNotes()}
+function openPresenter(){
+  if(pw&&!pw.closed){pw.focus();return}
+  pw=window.open('','wallnotes','width=560,height=820');if(!pw)return;
+  const css=[...document.styleSheets].flatMap(ss=>{try{return[...ss.cssRules].map(r=>r.cssText).filter(t=>t.includes('.pn'))}catch(e){return[]}}).join('\n');
+  pw.document.open();pw.document.write(`<!doctype html><meta charset="utf-8"><title>Notes</title><style>
+    body{margin:0;background:#12161f;color:#eef1f6;font:19px/1.5 system-ui,Segoe UI,sans-serif}
+    .pn{padding:22px 26px}.pn h4{font-size:16px}.bar{position:sticky;top:0;background:#1d2333;padding:8px 26px;font:13px system-ui;color:#8a93a6}
+    ${css}</style><div class="bar">→ next · ← back · keys here control the presentation</div><div class="pn" id="pn"></div>`);pw.document.close();
+  pw.document.addEventListener('keydown',e=>{if(e.key==='p'||e.key==='P')return;e.preventDefault();
+    document.dispatchEvent(new KeyboardEvent('keydown',{key:e.key}))});
+  updateNotes()}
+document.getElementById('nbtn').onclick=e=>{e.stopPropagation();toggleNotes()};
+document.addEventListener('keydown',e=>{if(introOn)return;
+  if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key==='p'||e.key==='P')openPresenter()});
+
