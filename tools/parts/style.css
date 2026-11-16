@@ -89,13 +89,13 @@ table.cmp td:first-child{font-weight:700;background:#eef3f8}
 .flow i{font-style:normal;color:var(--red);font-weight:700;font-size:20px}
 
 /* strings & pins */
-#strings,#pins{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-#pins{z-index:3}
-#pins .pin{transition:opacity .8s}
-#strings path{fill:none;stroke:#a5141c;stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(2px 5px 2px rgba(0,0,0,.35));
+.strings,.pins{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.pins{z-index:3}
+.pins .pin{transition:opacity .8s}
+.strings path{fill:none;stroke:#a5141c;stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(2px 5px 2px rgba(0,0,0,.35));
   transition:stroke-dashoffset 1.4s ease-in-out .55s}
-#strings path.thin{stroke-width:2.2;stroke:#6b0f14}
-#strings path.hidden{stroke-dashoffset:var(--len)!important}
+.strings path.thin{stroke-width:2.2;stroke:#6b0f14}
+.strings path.hidden{stroke-dashoffset:var(--len)!important}
 
 /* multipoint animation */
 .mpl .rod{animation:none}

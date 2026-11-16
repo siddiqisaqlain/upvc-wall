@@ -3,11 +3,17 @@
 import fs from 'fs';
 const [prefix = 'room', seed = '1', cn = '0.6', steps = '30'] = process.argv.slice(2);
 const API = 'http://127.0.0.1:8188';
-const guide = fs.readFileSync(new URL('./guide.png', import.meta.url));
+const guide = fs.readFileSync(new URL('./' + (process.env.GUIDE || 'guide.png'), import.meta.url));
 { const fd = new FormData(); fd.append('image', new Blob([guide]), 'upvc_guide.png'); fd.append('overwrite', 'true');
   await fetch(API + '/upload/image', { method: 'POST', body: fd }); }
 
-const pos = `RAW photo, straight-on frontal view of an industrial loft living room, back wall of pale grey limewashed concrete plaster with patchy texture and soft stains, ` +
+const pos = process.env.TWO ? `RAW photo, straight-on frontal view of an industrial loft living room, back wall of pale grey limewashed concrete plaster with patchy texture and soft stains, ` +
+ `two thin black picture frames with white mats hanging on the wall: a square frame on the left and a large wide frame in the middle, each with a slim black LED picture light bar above it, ` +
+ `a bright white uPVC plastic casement window with white frames and a transom on the right of the wall, white window handles, deep window reveal, white window sill, daylight, ` +
+ `a low walnut wood sideboard under the square frame with a ceramic vase and a few books, a low dark green velvet sofa under the wide frame, an antique red persian rug with an ornate medallion pattern and cream border on a polished grey concrete floor, a beige travertine stone cube coffee table on the rug, ` +
+ `a tall bird of paradise plant in a black pot on the far left, a small potted plant near the window, ` +
+ `exposed metal conduit pipes along the concrete ceiling, black enamel industrial pendant lamps, warm interior light mixed with soft daylight, ` +
+ `architectural interior photography, 24mm lens, eye level, natural shadows, highly detailed, photorealistic, 8k` : `RAW photo, straight-on frontal view of an industrial loft living room, back wall of pale grey limewashed concrete plaster with patchy texture and soft stains, ` +
  `a large thin black picture frame with a white mat hanging on the wall, a slim black LED picture light bar above the frame, ` +
  `a bright white uPVC plastic casement window with white frames and a transom on the left of the wall, white window handles, deep window reveal, white window sill, daylight, ` +
  `a low dark green boucle modular sofa under the frame, an antique red persian rug with an ornate medallion pattern and cream border on a polished grey concrete floor, a beige travertine stone cube coffee table on the rug, ` +

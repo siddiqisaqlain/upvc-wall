@@ -1,1 +1,8 @@
 tools/scene.html
+# scratch files from photo sorting (not needed to build the page)
+tools/hw/thumbs/
+tools/hw/heic/
+tools/hw/*sheet*.jpg
+tools/hw/arialbd.ttf
+tools/room/room_base_v1.png
+tools/room/mask.png

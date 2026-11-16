@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>uPVC Case Wall</title>
+<title>Hardware &amp; uPVC Case Wall</title>
 <style>
 
 :root{
@@ -96,13 +96,13 @@ table.cmp td:first-child{font-weight:700;background:#eef3f8}
 .flow i{font-style:normal;color:var(--red);font-weight:700;font-size:20px}
 
 /* strings & pins */
-#strings,#pins{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-#pins{z-index:3}
-#pins .pin{transition:opacity .8s}
-#strings path{fill:none;stroke:#a5141c;stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(2px 5px 2px rgba(0,0,0,.35));
+.strings,.pins{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.pins{z-index:3}
+.pins .pin{transition:opacity .8s}
+.strings path{fill:none;stroke:#a5141c;stroke-width:3.2;stroke-linecap:round;filter:drop-shadow(2px 5px 2px rgba(0,0,0,.35));
   transition:stroke-dashoffset 1.4s ease-in-out .55s}
-#strings path.thin{stroke-width:2.2;stroke:#6b0f14}
-#strings path.hidden{stroke-dashoffset:var(--len)!important}
+.strings path.thin{stroke-width:2.2;stroke:#6b0f14}
+.strings path.hidden{stroke-dashoffset:var(--len)!important}
 
 /* multipoint animation */
 .mpl .rod{animation:none}
@@ -139,28 +139,25 @@ html,body{background:#8f8c86}
 #roomphoto{position:absolute;left:-13000px;top:-6000px;width:28000px;height:16000px;z-index:-3;pointer-events:none;user-select:none}
 .scene{position:absolute;pointer-events:none}
 
-/* the board */
-/* gallery frame: thin black moulding, wide white mat, glass, lit from an LED bar above */
-#board{position:absolute;left:-720px;top:-720px;width:9040px;height:5040px;z-index:-1;border-radius:6px;pointer-events:auto;
+/* gallery frames: thin black moulding, wide white mat, glass, lit from an LED bar above */
+.frame{position:absolute;z-index:-1;border-radius:6px;pointer-events:auto;
   background:linear-gradient(#2c2c2c,#121212 2%,#0c0c0c 50%,#050505);
   box-shadow:0 70px 90px -20px rgba(15,6,2,.62),0 160px 220px -40px rgba(15,6,2,.45),-30px 30px 60px rgba(15,6,2,.25),30px 30px 60px rgba(15,6,2,.25),
     inset 0 6px 0 rgba(255,255,255,.18),inset 0 0 0 3px #000,inset 10px 0 14px rgba(255,255,255,.05),inset -10px 0 14px rgba(255,255,255,.04)}
-#board::before{content:"";position:absolute;inset:110px;border-radius:2px;background:#000;box-shadow:0 0 0 10px #1b1b1b}
-#board .face{position:absolute;inset:124px;overflow:hidden;
+.frame::before{content:"";position:absolute;inset:110px;border-radius:2px;background:#000;box-shadow:0 0 0 10px #1b1b1b}
+.frame .face{position:absolute;inset:124px;overflow:hidden;
   background:radial-gradient(ellipse 62% 30% at 50% 0%,#fffdf8,rgba(255,253,248,0) 100%),
     linear-gradient(#fbfaf6,#f1f0ec 38%,#e4e3de 78%,#d9d8d3);
   box-shadow:inset 0 46px 40px -20px rgba(0,0,0,.45),inset 30px 0 30px -18px rgba(0,0,0,.28),inset -30px 0 30px -18px rgba(0,0,0,.28),inset 0 -20px 26px -14px rgba(0,0,0,.22)}
-#board .face::before{content:"";position:absolute;inset:0;opacity:.5;
+.frame .face::before{content:"";position:absolute;inset:0;opacity:.5;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .48 0 0 0 0 .44 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)'/%3E%3C/svg%3E");background-size:300px 300px}
-#board .brand{display:none}
-#wallglow{left:-3200px;top:-3000px;width:14000px;height:9000px;z-index:-2;mix-blend-mode:screen;
-  background:radial-gradient(ellipse 4600px 2000px at 7000px 2000px,rgba(255,238,210,.34),rgba(255,238,210,.10) 45%,rgba(255,236,205,0) 72%)}
-#glass{position:absolute;left:-550px;top:-550px;width:8700px;height:4700px;z-index:5;pointer-events:none;transition:opacity .8s;
+.wallglow{z-index:-2;mix-blend-mode:screen}
+.glass{position:absolute;z-index:5;pointer-events:none;transition:opacity .8s;
   background:linear-gradient(rgba(255,250,240,.05),rgba(255,250,240,0) 25%,rgba(30,22,14,0) 55%,rgba(30,22,14,.07)),
     linear-gradient(168deg,rgba(255,255,255,0) 62%,rgba(255,255,255,.13) 72%,rgba(255,255,255,.04) 80%,rgba(255,255,255,0) 88%),
     linear-gradient(118deg,rgba(255,255,255,0) 8%,rgba(255,255,255,.05) 14%,rgba(255,255,255,0) 22%)}
-body.zoomed #glass{opacity:0}
-#lamp{left:200px;top:-1500px;width:7200px;height:2200px;z-index:1}
+body.zoomed .glass{opacity:0}
+.lamp{z-index:1}
 
 /* zones (hidden topics) */
 .zone{position:absolute;z-index:4;cursor:pointer;transition:opacity .6s}
@@ -183,18 +180,27 @@ body.zoomed #glass{opacity:0}
 .cluster.shown{pointer-events:auto}
 .cluster.shown .item{opacity:1;transform:rotate(var(--r,0deg))}
 .cluster.shown .item:hover{box-shadow:4px 18px 30px rgba(40,40,60,.3)}
-#strings path{fill:none!important;filter:none!important;stroke-linecap:round;transition:stroke-dashoffset 1.1s ease-in-out var(--d,0s)!important}
-#strings .thread path{stroke-dashoffset:var(--len)}
-#strings .thread.on path{stroke-dashoffset:0}
-#strings .st{stroke:#a5141c!important}
-#strings .sh{stroke:rgba(40,20,10,.22)!important}
-#strings .thick path{stroke-width:3.4!important}
-#strings .thin path{stroke-width:2.3!important}
-#strings .thin .st{stroke:#7d1016!important}
-body.still #strings path,body.still #pins .pin{transition:none!important}
-#pins .pin{opacity:0;transform:translateY(-14px);transition:opacity .3s ease var(--d,0s),transform .45s cubic-bezier(.2,1.6,.4,1) var(--d,0s)}
-#pins .pin.on{opacity:1;transform:none}
+.strings path{fill:none!important;filter:none!important;stroke-linecap:round;transition:stroke-dashoffset 1.1s ease-in-out var(--d,0s)!important}
+.strings .thread path{stroke-dashoffset:var(--len)}
+.strings .thread.on path{stroke-dashoffset:0}
+.strings .st{stroke:#a5141c!important}
+.strings .sh{stroke:rgba(40,20,10,.22)!important}
+.strings .thick path{stroke-width:3.4!important}
+.strings .thin path{stroke-width:2.3!important}
+.strings .thin .st{stroke:#7d1016!important}
+body.still .strings path,body.still .pins .pin{transition:none!important}
+.pins .pin{opacity:0;transform:translateY(-14px);transition:opacity .3s ease var(--d,0s),transform .45s cubic-bezier(.2,1.6,.4,1) var(--d,0s)}
+.pins .pin.on{opacity:1;transform:none}
 .mpl .rod{animation:rod 5s ease-in-out infinite!important}.mpl .hdl{animation:hdl 5s ease-in-out infinite!important}
+
+/* board 1 draws everything 1.25x larger (bigger mat, same reading size when zoomed) */
+.hwb .head{padding:22px 32px 20px}.hwb .head .no{font-size:27px}.hwb .head h2{font-size:47px}.hwb .head p{font-size:24px;margin-top:10px}
+.hwb .card{padding:28px 30px 25px;background-image:linear-gradient(transparent 58px,#e8a3a3 58px,#e8a3a3 60px,transparent 60px),repeating-linear-gradient(transparent 0 41px,#cfe0ef 41px 42px);background-position:0 0,0 18px}
+.hwb .card h3{font-size:29px;line-height:30px;margin-bottom:18px}.hwb .card p,.hwb .card li{font-size:24px;line-height:35px;margin-bottom:8px}
+.hwb .note{padding:32px 28px 28px;font-size:32px}.hwb .note small{font-size:21px}
+.hwb .photo{padding:17px 17px 12px}.hwb .photo figcaption{font-size:24px;padding:12px 5px 3px}.hwb .photo figcaption small{font-size:14px}
+.hwb .sheet{padding:22px 25px 20px;background-size:25px 25px}.hwb .sheet h3{font-size:26px}.hwb .sheet .sub{font-size:21px}
+.hwb .title{padding:50px 58px 42px}.hwb .title .stamp{font-size:30px}.hwb .title h1{font-size:90px}.hwb .title p{font-size:32px}.hwb .title .meta{font-size:22px}
 
 #hint{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(31,42,68,.82);color:#fff;
   font:600 15px var(--body);letter-spacing:.04em;padding:9px 18px;border-radius:30px;transition:opacity .5s;pointer-events:none}
@@ -202,11 +208,10 @@ body.still #strings path,body.still #pins .pin{transition:none!important}
 #hud{background:linear-gradient(transparent,rgba(25,18,10,.75))}
 
 
-#world::before{display:none!important}
 html,body{background:#8f8c86}
-#board{background:transparent!important;box-shadow:none!important}
-#board::before{display:none!important}
-#board .face,#board .brand,.scene,#label{display:none!important}
+.frame{background:transparent!important;box-shadow:none!important}
+.frame::before{display:none!important}
+.frame .face,.scene{display:none!important}
 #sceneimg{position:absolute;left:-13000px;top:-6000px;width:28000px;height:16000px;z-index:-2;pointer-events:none;user-select:none}
 </style>
 </head>
@@ -227,29 +232,455 @@ html,body{background:#8f8c86}
   </defs>
 </svg>
 <img class="scene" id="roomphoto" src="room/room.jpg" alt="">
-<div class="scene" id="wallglow"></div>
-<img id="sceneimg" src="img/wall.jpg?v=46c67490" alt="" draggable="false"><div id="board"><div class="face"></div></div>
-<svg class="scene" id="lamp" viewBox="0 0 7200 2200" overflow="visible">
+<div class="scene wallglow" style="left:-11940px;top:-4400px;width:14000px;height:9000px;background:radial-gradient(ellipse 3542px 1600px at 7000px 2000px,rgba(255,238,210,.34),rgba(255,238,210,.10) 45%,rgba(255,236,205,0) 72%)"></div>
+<div class="scene wallglow" style="left:-3200px;top:-3000px;width:14000px;height:9000px;background:radial-gradient(ellipse 4600px 2000px at 7000px 2000px,rgba(255,238,210,.34),rgba(255,238,210,.10) 45%,rgba(255,236,205,0) 72%)"></div>
+<img id="sceneimg" src="img/wall.jpg?v=9c30e4ad" alt="" draggable="false">
+<div class="frame" id="hw" data-name="Hardware" data-lamp="310" style="left:-8420px;top:-2120px;width:6960px;height:6440px"><div class="face"></div></div>
+<div class="frame" id="upvc" data-name="uPVC windows" data-lamp="310" style="left:-720px;top:-720px;width:9040px;height:5040px"><div class="face"></div></div>
+<svg class="scene lamp" id="lamp-hw" viewBox="-8840 -3120 7800 1200" overflow="visible" style="left:-8840px;top:-3120px;width:7800px;height:1200px">
   <defs>
-    <linearGradient id="ledbar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a3a"/><stop offset=".12" stop-color="#1a1a1a"/><stop offset=".8" stop-color="#0d0d0d"/><stop offset="1" stop-color="#050505"/></linearGradient>
-    <linearGradient id="stem" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0a0a"/><stop offset=".35" stop-color="#2a2a2a"/><stop offset=".6" stop-color="#151515"/><stop offset="1" stop-color="#050505"/></linearGradient>
-    <filter id="lb" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="30"/></filter>
-    <filter id="ls" x="-10%" y="-100%" width="120%" height="400%"><feGaussianBlur stdDeviation="45"/></filter>
+    <linearGradient id="ledbar-hw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a3a"/><stop offset=".12" stop-color="#1a1a1a"/><stop offset=".8" stop-color="#0d0d0d"/><stop offset="1" stop-color="#050505"/></linearGradient>
+    <linearGradient id="stem-hw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0a0a"/><stop offset=".35" stop-color="#2a2a2a"/><stop offset=".6" stop-color="#151515"/><stop offset="1" stop-color="#050505"/></linearGradient>
+    <filter id="lb-hw" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="ls-hw" x="-10%" y="-100%" width="120%" height="400%"><feGaussianBlur stdDeviation="45"/></filter>
   </defs>
-  <rect x="-480" y="520" width="8160" height="120" rx="40" fill="rgba(10,4,0,.55)" filter="url(#ls)"/>
-  <rect x="3440" y="470" width="320" height="320" fill="url(#stem)"/>
-  <rect x="3420" y="760" width="360" height="30" fill="#0b0b0b"/>
-  <rect x="-500" y="300" width="8200" height="180" rx="14" fill="url(#ledbar)"/>
-  <rect x="-500" y="302" width="8200" height="8" rx="4" fill="rgba(255,255,255,.18)"/>
-  <rect x="-500" y="400" width="8200" height="10" fill="#000" opacity=".6"/>
-  <rect x="-430" y="470" width="8060" height="60" rx="30" fill="#fff1d6" filter="url(#lb)" opacity=".8"/>
-  <rect x="-460" y="470" width="8160" height="30" rx="12" fill="#fffaf0"/>
-  <rect x="-380" y="476" width="8000" height="14" rx="7" fill="#ffffff"/>
+  <rect x="-8220" y="-2380" width="6560" height="120" rx="40" fill="rgba(10,4,0,.55)" filter="url(#ls-hw)"/>
+  <rect x="-5100" y="-2430" width="320" height="320" fill="url(#stem-hw)"/>
+  <rect x="-5120" y="-2140" width="360" height="30" fill="#0b0b0b"/>
+  <rect x="-8240" y="-2600" width="6600" height="180" rx="14" fill="url(#ledbar-hw)"/>
+  <rect x="-8240" y="-2598" width="6600" height="8" rx="4" fill="rgba(255,255,255,.18)"/>
+  <rect x="-8240" y="-2500" width="6600" height="10" fill="#000" opacity=".6"/>
+  <rect x="-8170" y="-2430" width="6460" height="60" rx="30" fill="#fff1d6" filter="url(#lb-hw)" opacity=".8"/>
+  <rect x="-8200" y="-2430" width="6560" height="30" rx="12" fill="#fffaf0"/>
+  <rect x="-8120" y="-2424" width="6360" height="14" rx="7" fill="#ffffff"/>
 </svg>
-<svg id="strings" width="7600" height="3600"></svg>
+<svg class="scene lamp" id="lamp-upvc" viewBox="-900 -1720 9400 1200" overflow="visible" style="left:-900px;top:-1720px;width:9400px;height:1200px">
+  <defs>
+    <linearGradient id="ledbar-upvc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a3a"/><stop offset=".12" stop-color="#1a1a1a"/><stop offset=".8" stop-color="#0d0d0d"/><stop offset="1" stop-color="#050505"/></linearGradient>
+    <linearGradient id="stem-upvc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0a0a"/><stop offset=".35" stop-color="#2a2a2a"/><stop offset=".6" stop-color="#151515"/><stop offset="1" stop-color="#050505"/></linearGradient>
+    <filter id="lb-upvc" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="ls-upvc" x="-10%" y="-100%" width="120%" height="400%"><feGaussianBlur stdDeviation="45"/></filter>
+  </defs>
+  <rect x="-280" y="-980" width="8160" height="120" rx="40" fill="rgba(10,4,0,.55)" filter="url(#ls-upvc)"/>
+  <rect x="3640" y="-1030" width="320" height="320" fill="url(#stem-upvc)"/>
+  <rect x="3620" y="-740" width="360" height="30" fill="#0b0b0b"/>
+  <rect x="-300" y="-1200" width="8200" height="180" rx="14" fill="url(#ledbar-upvc)"/>
+  <rect x="-300" y="-1198" width="8200" height="8" rx="4" fill="rgba(255,255,255,.18)"/>
+  <rect x="-300" y="-1100" width="8200" height="10" fill="#000" opacity=".6"/>
+  <rect x="-230" y="-1030" width="8060" height="60" rx="30" fill="#fff1d6" filter="url(#lb-upvc)" opacity=".8"/>
+  <rect x="-260" y="-1030" width="8160" height="30" rx="12" fill="#fffaf0"/>
+  <rect x="-180" y="-1024" width="7960" height="14" rx="7" fill="#ffffff"/>
+</svg>
+<svg class="strings" id="strings-hw" width="6320" height="5700" viewBox="-8100 -1800 6320 5700" style="left:-8100px;top:-1800px"></svg>
+<svg class="strings" id="strings-upvc" width="7600" height="3600" viewBox="0 0 7600 3600" style="left:0px;top:0px"></svg>
+
+<!-- ================= BOARD 1 · HARDWARE · content box x -8100..-1780, y -1800..3900 =================
+     3 x 3 grid of cells 2110 x 1900: columns x -8100 / -5990 / -3880, rows y -1800 / 100 / 2330.
+     Centre cell: title (step 1) on top, 09 curtains & hooks underneath.
+     Items here are drawn 1.25x (fonts via .hwb in build css), so widths/positions below are in that scale.
+     Survey photos: img/hw/*.jpg (tools/hw/crops.mjs). Web photos: img/hw/web/*.jpg (tools/hw/web-credits.json).
+     Facts and sources: tools/hw/research.md. -->
+
+<!-- ================= TITLE (step 1) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="1" data-name="Market survey" data-kicker="market survey · board 1" data-big="HARDWARE<br>IN INDIA" style="left:-5990px;top:100px">
+  <div class="item title" style="left:500px;top:75px;width:1200px;--r:-.5deg">
+    <div class="stamp">MARKET SURVEY · BOARD 1</div>
+    <h1>BUILDING<br><span>HARDWARE</span></h1>
+    <p>hinges · bolts · locks · handles · fittings</p>
+    <p>“The door is only as good as what holds it.”</p>
+    <div class="meta">Architecture Studio — Building Materials &amp; Construction · Presented by ______________</div>
+  </div>
+  <figure class="item photo" style="left:40px;top:40px;width:420px;--r:-2.5deg">
+    <img src="img/hw/shop.jpg" alt="Hardware shop wall of cabinet handles and boxed stock">
+    <figcaption>Where we looked — a local hardware store: handles on display, the rest in boxes<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1745px;top:60px;width:340px;--r:2.4deg">
+    <img src="img/hw/survey-2.jpg" alt="Team member photographing handles in a Häfele studio">
+    <figcaption>…and a brand studio (Häfele): every item on a display panel<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:520px;top:720px;width:760px;--r:1deg">
+    <h3>Who sells what in India</h3>
+    <p><b>Hettich, Häfele</b> (German) — furniture fittings: hinges, runners, lift-ups. <b>Ebco</b> (Mumbai, 1963) — furniture fittings.</p>
+    <p><b>Godrej</b> (Mumbai, locks since 1897) · <b>Dorset</b> (Indian, 1995, Gurugram) — locks, closers. <b>Ozone, dormakaba</b> — glass &amp; door hardware.</p>
+    <p>Bought at: <b>local hardware shops</b> (unbranded + regional), <b>brand studios</b>, and <b>online</b> (Moglix, IndiaMART, Amazon).</p>
+  </div>
+  <div class="item note green" style="left:1320px;top:820px;width:380px;--r:-2.5deg">White-bordered photo with "Survey photo" = <b>ours</b><small>items we couldn't photograph are from Wikimedia Commons — credited</small></div>
+  <div class="item card" style="left:1740px;top:720px;width:340px;--r:-1.2deg">
+    <h3>Look for ISI</h3>
+    <p>Builder's hardware has Indian Standards (BIS). <b>Steel butt hinges</b> must carry the <b>ISI mark</b> by law.</p>
+  </div>
+</div>
+
+<!-- ================= 01 MATERIALS & FINISHES (step 2) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="2" data-name="01 · Materials &amp; finishes" style="left:-8100px;top:-1800px">
+  <div class="item head" style="left:30px;top:20px;width:740px;--r:-.8deg"><span class="no">01 / 09</span><h2>Materials &amp; finishes</h2><p>what it is made of decides how long it lasts</p></div>
+  <div class="item card" style="left:30px;top:260px;width:740px;--r:.8deg">
+    <h3>Stainless steel: 304 vs 202</h3>
+    <p><b>SS 304</b> — ~18–20% chromium, <b>8–10.5% nickel</b>. Bathrooms, kitchens, outdoors.</p>
+    <p><b>SS 202</b> — only 4–6% nickel, 7.5–10% <b>manganese</b> instead. Cheaper and looks identical — but rusts near water, sea air and cleaning chemicals.</p>
+    <p><b>SS 316</b> (with molybdenum) — near the sea.</p>
+  </div>
+  <div class="item note" style="left:30px;top:830px;width:400px;--r:-3deg">Magnet test?<small>useless — 304 AND 202 are both non-magnetic. Ask for the grade stamp or a test certificate</small></div>
+  <div class="item card" style="left:810px;top:30px;width:680px;--r:-1deg">
+    <h3>The other metals</h3>
+    <p><b>Brass</b> — heavy, resists corrosion; lacquer dulls near salt air.</p>
+    <p><b>Zinc alloy (zamak)</b> — die-cast and always plated; corrodes once plating wears. The brass version costs ~30–80% more.</p>
+    <p><b>Aluminium</b> — light, extruded: profile handles.</p>
+    <p><b>Mixed metals</b> (SS hinge on a plain-steel frame) corrode each other.</p>
+  </div>
+  <div class="item sheet" style="left:810px;top:620px;width:680px;--r:.6deg">
+    <h3>Finishes seen in the market</h3>
+    <p class="sub">same handle, different coat</p>
+    <svg viewBox="0 0 520 210">
+      <defs>
+        <linearGradient id="fSS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9ecef"/><stop offset=".5" stop-color="#a9b0b7"/><stop offset="1" stop-color="#dfe3e7"/></linearGradient>
+        <linearGradient id="fCP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#8d969f"/><stop offset=".55" stop-color="#f4f6f8"/><stop offset="1" stop-color="#6f7880"/></linearGradient>
+        <linearGradient id="fG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e3a1"/><stop offset=".5" stop-color="#c49a3a"/><stop offset="1" stop-color="#f2d27a"/></linearGradient>
+        <linearGradient id="fRG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d2c4"/><stop offset=".5" stop-color="#b9806b"/><stop offset="1" stop-color="#eebfae"/></linearGradient>
+        <linearGradient id="fAB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a68a4f"/><stop offset=".5" stop-color="#5e4a24"/><stop offset="1" stop-color="#8f7440"/></linearGradient>
+        <linearGradient id="fBK" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3a3a"/><stop offset="1" stop-color="#0d0d0d"/></linearGradient>
+      </defs>
+      <g stroke="#1f2a44" stroke-width="1.5">
+        <circle cx="45" cy="60" r="36" fill="url(#fSS)"/><circle cx="130" cy="60" r="36" fill="url(#fCP)"/><circle cx="215" cy="60" r="36" fill="url(#fG)"/>
+        <circle cx="300" cy="60" r="36" fill="url(#fRG)"/><circle cx="385" cy="60" r="36" fill="url(#fAB)"/><circle cx="470" cy="60" r="36" fill="url(#fBK)"/>
+      </g>
+      <g class="lbl" style="font-size:14px" text-anchor="middle">
+        <text x="45" y="118">satin SS</text><text x="130" y="118">chrome</text><text x="215" y="118">PVD gold</text>
+        <text x="300" y="118">rose gold</text><text x="385" y="118">antique</text><text x="470" y="118">matt black</text>
+        <text x="45" y="136" style="font-size:12px;opacity:.7">brushed</text><text x="130" y="136" style="font-size:12px;opacity:.7">"CP"</text>
+        <text x="215" y="136" style="font-size:12px;opacity:.7">vacuum-coated</text><text x="300" y="136" style="font-size:12px;opacity:.7">ask for PVD</text>
+        <text x="385" y="136" style="font-size:12px;opacity:.7">brass</text><text x="470" y="136" style="font-size:12px;opacity:.7">PVD / powder</text>
+      </g>
+      <text x="260" y="178" text-anchor="middle" class="lblb" style="font-size:14px">PVD = metal condensed in a vacuum — harder and fades less than electroplating</text>
+      <text x="260" y="200" text-anchor="middle" class="lbl" style="font-size:13px">keep ONE finish family per project: handles, hinges, stoppers</text>
+    </svg>
+  </div>
+  <figure class="item photo" style="left:1530px;top:40px;width:420px;--r:2.2deg">
+    <img src="img/hw/decor-pulls.jpg" alt="Display of door pull handles in antique brass, copper, wood and satin finishes">
+    <figcaption>One panel, five finishes: antique brass, copper, wood inlay, satin, chrome<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1530px;top:820px;width:500px;--r:-1.4deg">
+    <h3>Check the box</h3>
+    <p>Grade (304 / 202), size, finish, brand, <b>ISI mark</b>. Feel the weight; look at the back face.</p>
+  </div>
+</div>
+
+<!-- ================= 02 HINGES (step 3) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="3" data-name="02 · Hinges" style="left:-5990px;top:-1800px">
+  <div class="item head" style="left:30px;top:20px;width:650px;--r:.8deg"><span class="no">02 / 09</span><h2>Hinges</h2><p>the part that carries the whole door</p></div>
+  <figure class="item photo" style="left:30px;top:250px;width:800px;--r:-1deg">
+    <img src="img/hw/hinges-ss.jpg" alt="Row of stainless steel butt hinges of different sizes on a shop counter">
+    <figcaption>SS butt hinges laid out by size — the counter-top "catalogue"<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:870px;top:30px;width:400px;--r:2.4deg">
+    <img src="img/hw/hinge-hand.jpg" alt="Hand holding a butt hinge">
+    <figcaption>Butt hinge — two leaves on one pin<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item sheet" style="left:30px;top:760px;width:800px;--r:.7deg">
+    <h3>Hinge family</h3>
+    <p class="sub">elevation, door edge on the right · Indian Standard in brackets</p>
+    <svg viewBox="0 0 600 230">
+      <g stroke="#1f2a44" stroke-width="2" fill="#fff">
+        <rect x="20" y="30" width="34" height="90"/><rect x="58" y="30" width="34" height="90"/><rect x="53" y="26" width="6" height="98" fill="#9aa5b1"/>
+        <rect x="140" y="40" width="70" height="70" rx="6"/><circle cx="168" cy="75" r="22" fill="#dcecf7"/><rect x="190" y="62" width="60" height="26"/>
+        <rect x="290" y="10" width="22" height="130"/><rect x="314" y="10" width="22" height="130"/>
+        <path d="M375 30 h40 v90 h-40 z"/><path d="M419 30 h50 v90 h-50 z"/><rect x="413" y="26" width="8" height="98" fill="#9aa5b1"/>
+        <rect x="520" y="10" width="54" height="130" fill="#f4f1ea"/><circle cx="536" cy="140" r="7" fill="#b3121b"/><circle cx="536" cy="10" r="7" fill="#b3121b"/>
+      </g>
+      <g stroke="#1f2a44" stroke-dasharray="3 3"><line x1="314" y1="10" x2="314" y2="140"/></g>
+      <g class="lbl" style="font-size:14px" text-anchor="middle">
+        <text x="56" y="150">butt</text><text x="56" y="168" style="font-size:12px;opacity:.7">IS 1341 / 12817</text>
+        <text x="190" y="150">concealed</text><text x="190" y="168" style="font-size:12px;opacity:.7">35 mm cup</text>
+        <text x="313" y="160">piano</text><text x="313" y="178" style="font-size:12px;opacity:.7">IS 3818</text>
+        <text x="422" y="150">parliament</text><text x="422" y="168" style="font-size:12px;opacity:.7">opens 180° · IS 362</text>
+        <text x="547" y="160">pivot</text><text x="547" y="178" style="font-size:12px;opacity:.7">+ floor spring</text>
+      </g>
+      <text x="300" y="215" text-anchor="middle" class="lblb" style="font-size:13px">+ ball-bearing butt (heavy doors) · double-acting spring hinge (swing doors, IS 453)</text>
+    </svg>
+  </div>
+  <div class="item card" style="left:1310px;top:30px;width:690px;--r:-1.2deg">
+    <h3>How many per door?</h3>
+    <p>Up to 1524 mm high → <b>2</b>. Up to 2286 mm → <b>3</b>. Then <b>+1</b> per extra 762 mm.</p>
+    <p>So a normal 2100 mm Indian door takes <b>3 hinges</b>. Heavy or busy doors → <b>ball-bearing</b> hinges.</p>
+  </div>
+  <figure class="item photo" style="left:870px;top:560px;width:400px;--r:-1.8deg">
+    <img src="img/hw/web/concealed-hinge.jpg" alt="Soft-close concealed cup hinge on a wardrobe door">
+    <figcaption>Concealed "auto" hinge, soft-close<small>Photo: Tony Webster · CC BY 2.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1310px;top:470px;width:690px;--r:1deg">
+    <h3>Cabinet hinges: ask for the crank</h3>
+    <p>35 mm cup, ~110° opening, adjustable after fitting, optional <b>soft-close</b>.</p>
+    <p><b>0 crank</b> = full overlay (door covers the side) · <b>8 crank</b> = half overlay (two doors share one side) · <b>16 crank</b> = inset (door sits inside).</p>
+  </div>
+  <figure class="item photo" style="left:880px;top:1060px;width:300px;--r:2deg">
+    <img src="img/hw/web/piano-hinge.jpg" alt="Brass piano hinge running the full length of a lid">
+    <figcaption>Piano hinge — full length<small>Photo: Frank C. Müller · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <div class="item note pink" style="left:1360px;top:1060px;width:360px;--r:-2.5deg">8 crank or 16 crank?<small>ask before the carpenter drills the 35 mm cup</small></div>
+</div>
+
+<!-- ================= 03 BOLTS & ALDROPS (step 4) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="4" data-name="03 · Bolts &amp; aldrops" style="left:-3880px;top:-1800px">
+  <div class="item head" style="left:30px;top:20px;width:700px;--r:-.8deg"><span class="no">03 / 09</span><h2>Bolts &amp; aldrops</h2><p>simple sliding steel that keeps a door shut</p></div>
+  <figure class="item photo" style="left:30px;top:260px;width:500px;--r:1.4deg">
+    <img src="img/hw/aldrops.jpg" alt="Two aldrops, one satin and one black, on a green display board">
+    <figcaption>Aldrops — the long bolt with a hasp for a padlock<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:580px;top:190px;width:520px;--r:-2deg">
+    <img src="img/hw/towerbolt-hand.jpg" alt="Brass tower bolt held in the hand">
+    <figcaption>Brass tower bolt — barrel slides into a socket<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1150px;top:30px;width:720px;--r:1deg">
+    <h3>Know these</h3>
+    <p><b>Tower bolt</b> — surface bolt on the inside face of doors &amp; windows (IS 204; SS: IS 15833).</p>
+    <p><b>Aldrop</b> ("kunda") — heavy sliding bolt that takes a <b>padlock</b>, so the door locks from outside (IS 2681 brass · IS 281 MS · IS 15834 SS).</p>
+    <p><b>Flush bolt</b> — recessed in the edge of the second leaf of a double door (IS 5187).</p>
+    <p><b>Gate hook</b> — hook + eye that holds a shutter <b>open</b>.</p>
+  </div>
+  <figure class="item photo" style="left:580px;top:640px;width:450px;--r:-1deg">
+    <img src="img/hw/bolts-board.jpg" alt="Green display board of tower bolts and aldrops in brass, antique and satin finishes">
+    <figcaption>One board of bolts: same mechanism, many finishes<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1150px;top:700px;width:420px;--r:-1.6deg">
+    <img src="img/hw/gate-hooks.jpg" alt="Stainless steel gate hooks and a black tower bolt on display">
+    <figcaption>Gate hooks and a tower bolt<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1610px;top:740px;width:400px;--r:2deg">
+    <img src="img/hw/web/padlock.jpg" alt="Brass padlock with keys">
+    <figcaption>Padlock (IS 15275)<small>Photo: Sebastian Hartlaub · CC BY-SA 2.5</small></figcaption>
+  </figure>
+  <div class="item note" style="left:30px;top:1080px;width:420px;--r:3deg">Aligarh = India's "city of locks"<small>its locks got a GI tag in 2023</small></div>
+  <div class="item card" style="left:1610px;top:1180px;width:420px;--r:-1deg">
+    <h3>Price check</h3>
+    <p>Aldrops are usually 6″–10″; heavy sets roughly <b>₹150–600</b>.<small style="display:block;font-size:15px;color:#667">indicative, online, Nov 2026</small></p>
+  </div>
+</div>
+
+<!-- ================= 04 LOCKS & LEVERS (step 5) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="5" data-name="04 · Locks &amp; levers" style="left:-3880px;top:100px">
+  <div class="item head" style="left:30px;top:20px;width:700px;--r:.8deg"><span class="no">04 / 09</span><h2>Locks &amp; levers</h2><p>what turns, what latches, what locks</p></div>
+  <figure class="item photo" style="left:30px;top:250px;width:410px;--r:-1.5deg">
+    <img src="img/hw/dorset.jpg" alt="Dorset display of mortise lever handles on long plates in matt black and graphite">
+    <figcaption>Levers on <b>plate</b> (Dorset) — fit over a mortise lock<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:480px;top:190px;width:310px;--r:1.8deg">
+    <img src="img/hw/hafele-locks.jpg" alt="Häfele panel with lever on rose, knob lock, deadbolt thumb-turns">
+    <figcaption>Lever on <b>rose</b>, knob, deadbolt (Häfele)<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:830px;top:250px;width:320px;--r:-1deg">
+    <img src="img/hw/mortise-bodies.jpg" alt="Mortise lock bodies and hinges on a Häfele display">
+    <figcaption>Mortise lock <b>bodies</b> — hidden in the door edge<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item sheet" style="left:1200px;top:30px;width:650px;--r:.6deg">
+    <h3>Mortise lock, opened up</h3>
+    <p class="sub">door edge on the right · lever-type mortice locks: IS 16015</p>
+    <svg viewBox="0 0 510 300">
+      <rect x="40" y="20" width="300" height="260" fill="#fff" stroke="#1f2a44" stroke-width="2"/>
+      <rect x="340" y="10" width="26" height="280" fill="#d9d9d9" stroke="#1f2a44" stroke-width="2"/>
+      <path d="M366 70 h34 l-14 22 h-20 z" fill="#ffcf4a" stroke="#1f2a44"/>
+      <rect x="366" y="190" width="40" height="26" fill="#9aa5b1" stroke="#1f2a44"/>
+      <circle cx="210" cy="82" r="22" fill="#fff" stroke="#1f2a44" stroke-width="2"/><rect x="206" y="72" width="8" height="20" fill="#1f2a44"/>
+      <circle cx="210" cy="200" r="20" fill="#fff" stroke="#1f2a44" stroke-width="2"/><circle cx="210" cy="194" r="6" fill="#1f2a44"/><rect x="207" y="196" width="6" height="16" fill="#1f2a44"/>
+      <g stroke="#b3121b" stroke-width="1.5"><line x1="210" y1="250" x2="366" y2="250" marker-start="url(#arr)" marker-end="url(#arr)"/><line x1="440" y1="82" x2="440" y2="200" marker-start="url(#arr)" marker-end="url(#arr)"/></g>
+      <g class="lbl" style="font-size:14px"><text x="232" y="270">backset 45–65 mm</text><text x="408" y="74">latch</text><text x="410" y="230">deadbolt</text>
+        <text x="62" y="86">handle spindle</text><text x="62" y="204">key cylinder</text><text x="444" y="132" style="font-size:13px">centre</text><text x="444" y="148" style="font-size:13px">distance</text><text x="444" y="166" style="font-size:13px" class="lblb">72 / 85</text></g>
+    </svg>
+  </div>
+  <div class="item card" style="left:1200px;top:610px;width:650px;--r:-1deg">
+    <h3>Lock types</h3>
+    <p><b>Mortise</b> — body sunk into the door edge; handles + cylinder on the faces.</p>
+    <p><b>Cylindrical / tubular</b> — bored through the door; privacy button for toilets (IS 16016).</p>
+    <p><b>Rim lock / night latch</b> — screwed on the inside face of the main door (IS 1019).</p>
+    <p>Order by <b>backset, centre distance, door thickness</b> and <b>handing</b>.</p>
+  </div>
+  <figure class="item photo" style="left:30px;top:1100px;width:320px;--r:1.6deg">
+    <img src="img/hw/web/digital-lock.jpg" alt="Keypad electronic deadbolt with key override">
+    <figcaption>Digital lock — PIN + key override<small>Photo: TaurusEmerald · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <div class="item card" style="left:390px;top:1150px;width:560px;--r:-.8deg">
+    <h3>Digital locks</h3>
+    <p>PIN, fingerprint, RFID card or app — plus a <b>mechanical key</b>. Godrej Catus Touch Plus: fits 35–65 mm doors; flat battery? power it from a <b>power bank</b> outside.</p>
+  </div>
+  <figure class="item photo" style="left:990px;top:1180px;width:320px;--r:2deg">
+    <img src="img/hw/web/rim-lock.jpg" alt="Traditional rim lock with knob and key">
+    <figcaption>Rim lock on a door face<small>Photo: aboespfl · CC0</small></figcaption>
+  </figure>
+  <div class="item note pink" style="left:1450px;top:1250px;width:380px;--r:2.5deg">Lever or knob?<small>levers are easier for elderly, wet or full hands — accessibility guidelines prefer them</small></div>
+</div>
+
+<!-- ================= 05 PULL HANDLES (step 6) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="6" data-name="05 · Door pull handles" style="left:-3880px;top:2330px">
+  <div class="item head" style="left:30px;top:20px;width:700px;--r:-.8deg"><span class="no">05 / 09</span><h2>Door pull handles</h2><p>the handshake of the building</p></div>
+  <figure class="item photo" style="left:30px;top:250px;width:520px;--r:1.2deg">
+    <img src="img/hw/main-pulls.jpg" alt="Wall of decorative main-door pull handles in brass, copper, wood and steel">
+    <figcaption>Main-door pulls: carved brass, wood + metal, cut-pattern steel<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:610px;top:150px;width:380px;--r:-2deg">
+    <img src="img/hw/brass-pull.jpg" alt="Long brass and satin steel pull handles on a red display">
+    <figcaption>Long bar pulls — up to door height<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1040px;top:40px;width:700px;--r:1deg">
+    <h3>Choosing a pull</h3>
+    <p>Sold by <b>hole centres</b>: 300, 450, 600, 900, 1000, 1200 mm; overall length ≈ centres + 100 mm.</p>
+    <p><b>Back-to-back</b> pairs bolt through the door — one handle each side; suits timber or 8–12 mm toughened glass.</p>
+    <p>A pull does not hold the door shut — it needs a <b>latch, lock or closer</b>.</p>
+  </div>
+  <figure class="item photo" style="left:1050px;top:620px;width:360px;--r:2deg">
+    <img src="img/hw/closer-panel.jpg" alt="Häfele panel with D-shaped pull handles and door closers">
+    <figcaption>D-pulls on a Häfele panel<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item note" style="left:1460px;top:720px;width:380px;--r:-3deg">Push side or pull side?<small>a flat <b>push plate</b> on one face tells people which way</small></div>
+</div>
+
+<!-- ================= 06 CABINET HANDLES & KNOBS (step 7) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="7" data-name="06 · Cabinet handles &amp; knobs" style="left:-5990px;top:2330px">
+  <div class="item head" style="left:30px;top:20px;width:750px;--r:.8deg"><span class="no">06 / 09</span><h2>Cabinet handles &amp; knobs</h2><p>the biggest wall in every hardware shop</p></div>
+  <figure class="item photo" style="left:30px;top:250px;width:540px;--r:-1.2deg">
+    <img src="img/hw/profiles.jpg" alt="Aluminium and black profile handles of increasing length on wooden display boards">
+    <figcaption>Profile / bar handles — sold by length<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:610px;top:180px;width:500px;--r:1.6deg">
+    <img src="img/hw/knobs.jpg" alt="Cabinet knobs, ring pulls and cup handles in black, copper, teal and brass">
+    <figcaption>Knobs, ring pulls and cup handles<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1150px;top:40px;width:500px;--r:-1.4deg">
+    <img src="img/hw/flush-pulls.jpg" alt="Oval flush pulls for sliding doors">
+    <figcaption>Flush pulls — for <b>sliding</b> shutters that pass each other<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1690px;top:70px;width:380px;--r:2.4deg">
+    <img src="img/hw/handle-hand.jpg" alt="Hand holding a cabinet pull handle">
+    <figcaption>Holding one: feel the weight<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1150px;top:560px;width:700px;--r:.8deg">
+    <h3>Sized by hole centres</h3>
+    <p>Pulls are sold by the <b>centre-to-centre (C/C)</b> distance of the screws: 96, 128, 160, 192, 224 mm…</p>
+    <p>Replacing one? <b>Measure C/C first</b>, not the overall length.</p>
+  </div>
+  <div class="item card" style="left:610px;top:870px;width:500px;--r:-1deg">
+    <h3>Handle-less kitchens</h3>
+    <p><b>Gola profiles</b> — aluminium G / J / C channels along the shutter top give a finger grip (Häfele "Profin Gola", Ebco). Or <b>push-to-open</b>.</p>
+  </div>
+</div>
+
+<!-- ================= 07 FURNITURE FITTINGS (step 8) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="8" data-name="07 · Furniture fittings" style="left:-8100px;top:2330px">
+  <div class="item head" style="left:30px;top:20px;width:720px;--r:-.8deg"><span class="no">07 / 09</span><h2>Furniture fittings</h2><p>what makes a modular kitchen move</p></div>
+  <figure class="item photo" style="left:30px;top:240px;width:420px;--r:1.4deg">
+    <img src="img/hw/web/pullout-basket.jpg" alt="Kitchen pull-out rack on telescopic ball-bearing slides">
+    <figcaption>Pull-out on <b>telescopic channels</b><small>Photo: Stilfehler · CC BY-SA 4.0 · Wikimedia Commons</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:490px;top:190px;width:380px;--r:-2deg">
+    <img src="img/hw/web/lift-up.jpg" alt="Overhead cabinet lift-up fitting with stay arm">
+    <figcaption><b>Lift-up</b> fitting on a wall cabinet<small>Photo: Shixart1985 · CC BY 2.0</small></figcaption>
+  </figure>
+  <div class="item card" style="left:910px;top:30px;width:720px;--r:1deg">
+    <h3>Drawers</h3>
+    <p><b>Telescopic ball-bearing channels</b> — side-fixed; e.g. Ebco: 35 / 45 kg, 250–500 mm long.</p>
+    <p><b>Under-mount runners</b> — hidden below the drawer, soft-close (40 / 70 kg classes).</p>
+    <p><b>Tandem box</b> — metal-sided drawer system, up to ~65 kg.</p>
+    <p>Choose by <b>load</b> and <b>length = carcass depth</b>.</p>
+  </div>
+  <div class="item card" style="left:910px;top:600px;width:720px;--r:-.8deg">
+    <h3>Overhead shutters: lift-ups</h3>
+    <p><b>Bi-fold</b> (folds in the middle) · <b>swing-up</b> (lifts up and over) · <b>parallel lift</b> — with built-in damping, sized by the flap's weight.</p>
+  </div>
+  <figure class="item photo" style="left:1670px;top:60px;width:380px;--r:2deg">
+    <img src="img/hw/web/corner-pullout.jpg" alt="Swing-out corner shelf in a kitchen cabinet">
+    <figcaption>"Magic corner" swing-out<small>Photo: Stilfehler · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:30px;top:980px;width:420px;--r:-1deg">
+    <img src="img/hw/web/sliding-track.jpg" alt="Top-hung sliding door roller on a flat track">
+    <figcaption>Top-hung <b>sliding track</b> + roller<small>Photo: Dmitri Popov · CC BY-SA 3.0</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:490px;top:960px;width:360px;--r:1.8deg">
+    <img src="img/hw/web/cabinet-lock.jpg" alt="Drawer lock with key">
+    <figcaption>Drawer / cupboard lock<small>Photo: Willh26 · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <div class="item note green" style="left:960px;top:960px;width:420px;--r:-2.5deg">Made in India too<small>Hettich's Indore plant makes ~60 million hinges a year</small></div>
+  <div class="item card" style="left:1430px;top:980px;width:600px;--r:1deg">
+    <h3>Price check</h3>
+    <p>Hettich soft-close concealed hinge, pair: <b>~₹230–480</b>. Gola profile: <b>~₹1,100–1,950</b> a length.<small style="display:block;font-size:15px;color:#667">indicative, online, Nov 2026</small></p>
+  </div>
+</div>
+
+<!-- ================= 08 DOOR CONTROL & SAFETY (step 9) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="9" data-name="08 · Door control &amp; safety" style="left:-8100px;top:100px">
+  <div class="item head" style="left:30px;top:20px;width:640px;--r:.8deg"><span class="no">08 / 09</span><h2>Door control &amp; safety</h2><p>closing, stopping, seeing who's there</p></div>
+  <figure class="item photo" style="left:30px;top:240px;width:520px;--r:-1.2deg">
+    <img src="img/hw/closers.jpg" alt="Overhead hydraulic door closers on a Häfele display">
+    <figcaption>Overhead hydraulic door closers (Häfele)<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item sheet" style="left:700px;top:30px;width:600px;--r:.8deg">
+    <h3>Closer size (EN 1154)</h3>
+    <p class="sub">pick by door width AND weight — take the larger</p>
+    <table class="cmp"><tr><th>Size</th><th>width up to</th><th>weight up to</th></tr>
+      <tr><td>EN 2</td><td>850 mm</td><td>40 kg</td></tr><tr><td>EN 3</td><td>950 mm</td><td>60 kg</td></tr>
+      <tr><td>EN 4</td><td>1100 mm</td><td>80 kg</td></tr><tr><td>EN 5</td><td>1250 mm</td><td>100 kg</td></tr></table>
+    <p class="sub" style="margin-top:8px">EN 1 (750 mm / 20 kg) … EN 7 (1600 mm / 160 kg) · fire doors: EN 3 minimum · India: IS 3564</p>
+  </div>
+  <figure class="item photo" style="left:1335px;top:30px;width:380px;--r:-1.6deg">
+    <img src="img/hw/web/floor-spring.jpg" alt="Hydraulic floor spring with stainless cover plate">
+    <figcaption><b>Floor spring</b> — closer buried in the floor under a pivoted glass or heavy door (IS 6315)<small>Photo: Phaptran · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1745px;top:60px;width:330px;--r:2deg">
+    <img src="img/hw/glass-panel.jpg" alt="Display of glass door patch fittings and hinges">
+    <figcaption>Glass door: patch fittings + D-handle<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:30px;top:720px;width:440px;--r:1.6deg">
+    <img src="img/hw/stoppers.jpg" alt="Floor-mounted door stoppers with rubber buffers">
+    <figcaption>Door stoppers (IS 1823)<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:510px;top:740px;width:300px;--r:-2deg">
+    <img src="img/hw/web/door-viewer.jpg" alt="Door viewer peephole">
+    <figcaption>Door viewer ("magic eye")<small>Photo: Schekinov A. V. · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:850px;top:760px;width:400px;--r:1.4deg">
+    <img src="img/hw/web/door-chain.jpg" alt="Door safety chain on a timber door">
+    <figcaption>Door chain<small>Photo: Santeri Viinamäki · CC BY 4.0</small></figcaption>
+  </figure>
+  <div class="item card" style="left:1290px;top:830px;width:500px;--r:-1deg">
+    <h3>Price check</h3>
+    <p>Dorset hydraulic closer: 40 kg <b>₹1,500</b> · 60 kg <b>₹1,745</b> · 80 kg <b>₹3,095</b> (MRP).<small style="display:block;font-size:15px;color:#667">indicative, online, Nov 2026</small></p>
+  </div>
+  <figure class="item photo" style="left:30px;top:1160px;width:420px;--r:-1deg">
+    <img src="img/hw/web/glass-shower-hinge.jpg" alt="Chrome glass-to-wall shower door hinges">
+    <figcaption>Glass-to-wall hinges (shower)<small>Photo: Phaptran · CC BY-SA 4.0</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:500px;top:1200px;width:420px;--r:1.2deg">
+    <img src="img/hw/web/spider-fitting.jpg" alt="Point-fixed glass facade with spider fittings">
+    <figcaption><b>Spider fittings</b> hold drilled glass at points<small>Photo: Ding YangYang · CC BY-SA 3.0</small></figcaption>
+  </figure>
+  <div class="item note" style="left:1290px;top:1240px;width:400px;--r:2.5deg">Why does a glass door need a <b>floor</b> spring?<small>no frame to hang a closer on</small></div>
+</div>
+
+<!-- ================= 09 CURTAINS & HOOKS (step 10) ================= -->
+<div class="cluster hwb" data-board="hw" data-step="10" data-name="09 · Curtains &amp; hooks" style="left:-5990px;top:1450px">
+  <div class="item head" style="left:30px;top:20px;width:600px;--r:-.8deg"><span class="no">09 / 09</span><h2>Curtains &amp; hooks</h2><p>small items, sold in huge variety</p></div>
+  <figure class="item photo" style="left:675px;top:10px;width:312px;--r:1.8deg">
+    <img src="img/hw/curtain-rods.jpg" alt="Häfele display of curtain rods with decorative finials">
+    <figcaption>Curtain rods + finials (Häfele)<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1025px;top:38px;width:312px;--r:-2deg">
+    <img src="img/hw/finials.jpg" alt="Stand of curtain rod finials in glass, brass and wood">
+    <figcaption>Finials: glass, brass, wood<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1375px;top:12px;width:325px;--r:1.4deg">
+    <img src="img/hw/coat-rail.jpg" alt="Black wall-mounted coat hook rail held in the hand">
+    <figcaption>Coat-hook rail<small>Survey photo</small></figcaption>
+  </figure>
+  <figure class="item photo" style="left:1738px;top:50px;width:325px;--r:-1.6deg">
+    <img src="img/hw/robe-hooks.jpg" alt="Robe hooks in chrome and copper on a red display">
+    <figcaption>Robe hooks<small>Survey photo</small></figcaption>
+  </figure>
+  <div class="item card" style="left:30px;top:240px;width:600px;--r:1deg">
+    <h3>Curtain hardware</h3>
+    <p><b>Rod</b> with rings, or a <b>track</b> with hidden runners, fixed on <b>brackets</b>; <b>finials</b> stop the rings sliding off.</p>
+    <p>Standards: curtain rails IS 10342 · coat &amp; wardrobe hooks IS 9899.</p>
+  </div>
+</div>
 
 <!-- ================= HERO (step 1) ================= -->
-<div class="cluster" data-step="1" data-name="The case" style="left:2000px;top:1300px">
+<div class="cluster" data-board="upvc" data-step="1" data-name="The case" data-kicker="case file no. 09" data-big="uPVC WINDOWS<br>&amp; DOORS" style="left:2000px;top:1300px">
   <div class="item title head-anchor" id="title" style="left:1180px;top:110px;width:1320px;--r:-.6deg">
     <div class="stamp">CASE FILE · NO. 09</div>
     <h1><span>uPVC</span> WINDOWS<br>&amp; DOORS</h1>
@@ -318,7 +749,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 01 MATERIAL (step 2) ================= -->
-<div class="cluster" data-step="2" data-name="01 · The material" style="left:100px;top:100px">
+<div class="cluster" data-board="upvc" data-step="2" data-name="01 · The material" style="left:100px;top:100px">
   <div class="item head" style="left:40px;top:30px;width:560px;--r:-1deg"><span class="no">01 / 10</span><h2>The material</h2><p>what is “uPVC” actually?</p></div>
 
   <div class="item card" style="left:40px;top:250px;width:600px;--r:.8deg">
@@ -363,7 +794,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 02 PROFILE (step 3) ================= -->
-<div class="cluster" data-step="3" data-name="02 · The profile" style="left:2000px;top:100px">
+<div class="cluster" data-board="upvc" data-step="3" data-name="02 · The profile" style="left:2000px;top:100px">
   <div class="item head" style="left:40px;top:30px;width:560px;--r:.8deg"><span class="no">02 / 10</span><h2>The profile</h2><p>the hollow skeleton of the frame</p></div>
 
   <div class="item sheet" style="left:30px;top:220px;width:780px;--r:-.7deg">
@@ -442,7 +873,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 03 GLASS (step 4) ================= -->
-<div class="cluster" data-step="4" data-name="03 · The glass" style="left:3900px;top:100px">
+<div class="cluster" data-board="upvc" data-step="4" data-name="03 · The glass" style="left:3900px;top:100px">
   <div class="item head" style="left:40px;top:30px;width:520px;--r:-.8deg"><span class="no">03 / 10</span><h2>The glass</h2><p>70–80% of the window's area</p></div>
 
   <div class="item sheet" style="left:30px;top:220px;width:700px;--r:.6deg">
@@ -515,7 +946,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 04 WINDOW TYPES (step 5) ================= -->
-<div class="cluster" data-step="5" data-name="04 · Window types" style="left:5800px;top:100px">
+<div class="cluster" data-board="upvc" data-step="5" data-name="04 · Window types" style="left:5800px;top:100px">
   <div class="item head" style="left:40px;top:30px;width:560px;--r:1deg"><span class="no">04 / 10</span><h2>Window types</h2><p>how the sash moves</p></div>
 
   <div class="item sheet" style="left:30px;top:220px;width:860px;--r:-.5deg">
@@ -544,7 +975,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 05 DOORS (step 6) ================= -->
-<div class="cluster" data-step="6" data-name="05 · Doors" style="left:5800px;top:1300px">
+<div class="cluster" data-board="upvc" data-step="6" data-name="05 · Doors" style="left:5800px;top:1300px">
   <div class="item head" style="left:40px;top:30px;width:520px;--r:-1deg"><span class="no">05 / 10</span><h2>Doors</h2><p>bigger, heavier, more hardware</p></div>
 
   <div class="item sheet" style="left:30px;top:210px;width:860px;--r:.6deg">
@@ -573,7 +1004,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 06 HARDWARE – LOCKING (step 7) ================= -->
-<div class="cluster" data-step="7" data-name="06 · Hardware: locking" style="left:5800px;top:2500px">
+<div class="cluster" data-board="upvc" data-step="7" data-name="06 · Hardware: locking" style="left:5800px;top:2500px">
   <div class="item head" style="left:40px;top:30px;width:600px;--r:.8deg"><span class="no">06 / 10</span><h2>Hardware: locking</h2><p>one handle, many locking points</p></div>
 
   <div class="item sheet play-on-step" style="left:40px;top:220px;width:440px;--r:-1deg">
@@ -628,7 +1059,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 07 HARDWARE – MOVING (step 8) ================= -->
-<div class="cluster" data-step="8" data-name="07 · Hardware: moving" style="left:3900px;top:2500px">
+<div class="cluster" data-board="upvc" data-step="8" data-name="07 · Hardware: moving" style="left:3900px;top:2500px">
   <div class="item head" style="left:40px;top:30px;width:600px;--r:-.8deg"><span class="no">07 / 10</span><h2>Hardware: moving</h2><p>hinges, stays &amp; the tilt-turn trick</p></div>
 
   <div class="item sheet" style="left:30px;top:210px;width:820px;--r:.6deg">
@@ -672,7 +1103,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 08 INSTALLATION (step 9) ================= -->
-<div class="cluster" data-step="9" data-name="08 · Installation" style="left:2000px;top:2500px">
+<div class="cluster" data-board="upvc" data-step="9" data-name="08 · Installation" style="left:2000px;top:2500px">
   <div class="item head" style="left:40px;top:30px;width:540px;--r:1deg"><span class="no">08 / 10</span><h2>Installation</h2><p>a great window fitted badly is a bad window</p></div>
 
   <div class="item sheet" style="left:30px;top:210px;width:720px;--r:-.6deg">
@@ -741,7 +1172,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 09 PERFORMANCE (step 10) ================= -->
-<div class="cluster" data-step="10" data-name="09 · Performance" style="left:100px;top:2500px">
+<div class="cluster" data-board="upvc" data-step="10" data-name="09 · Performance" style="left:100px;top:2500px">
   <div class="item head" style="left:40px;top:30px;width:560px;--r:-1deg"><span class="no">09 / 10</span><h2>Performance</h2><p>what the test certificates mean</p></div>
 
   <div class="item card" style="left:40px;top:220px;width:520px;--r:1deg">
@@ -779,7 +1210,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= 10 COMPARE (step 11) ================= -->
-<div class="cluster" data-step="11" data-name="10 · uPVC vs the rest" style="left:100px;top:1300px">
+<div class="cluster" data-board="upvc" data-step="11" data-name="10 · uPVC vs the rest" style="left:100px;top:1300px">
   <div class="item head" style="left:40px;top:30px;width:560px;--r:.8deg"><span class="no">10 / 10</span><h2>uPVC vs the rest</h2><p>the same window in three materials</p></div>
   <div class="item sheet" style="left:30px;top:200px;width:1190px;--r:-.4deg">
     <h3>Comparison sheet</h3>
@@ -800,7 +1231,7 @@ html,body{background:#8f8c86}
 </div>
 
 <!-- ================= CHECKLIST (step 12) ================= -->
-<div class="cluster" data-step="12" data-name="Specifier's checklist" style="left:4700px;top:1340px">
+<div class="cluster" data-board="upvc" data-step="12" data-name="Specifier's checklist" style="left:4700px;top:1340px">
   <div class="item card tape" style="left:0;top:0;width:820px;--r:1.2deg">
     <h3>✔ The architect's spec checklist</h3>
     <ol style="columns:2;column-gap:34px">
@@ -823,8 +1254,10 @@ html,body{background:#8f8c86}
 </div>
 
 
-<svg id="pins" width="7600" height="3600"></svg>
-<div id="glass"></div>
+<svg class="pins" id="pins-hw" width="6320" height="5700" viewBox="-8100 -1800 6320 5700" style="left:-8100px;top:-1800px"></svg>
+<svg class="pins" id="pins-upvc" width="7600" height="3600" viewBox="0 0 7600 3600" style="left:0px;top:0px"></svg>
+<div class="glass" style="left:-8250px;top:-1950px;width:6620px;height:6100px"></div>
+<div class="glass" style="left:-550px;top:-550px;width:8700px;height:4700px"></div>
 </div>
 </div>
 <div id="vignette"></div>
@@ -833,13 +1266,35 @@ html,body{background:#8f8c86}
   <button id="prev" title="Back (← / Esc)">◀</button>
   <span class="t" id="ht">—</span><span id="hc"></span>
   <button id="next" title="Next topic (→ / Space)">▶</button>
-  <span class="k">→ next topic · ← back · W wall · B board · A reveal all · C credits · F fullscreen · H hide bar</span>
+  <span class="k">→ next · ← back · W wall · 1 / 2 boards · B board · A reveal all · C credits · F fullscreen · H hide bar</span>
   <button id="cbtn">Credits</button>
 </div>
 
 <div id="credits"><div class="in">
   <h2>Credits &amp; sources</h2>
-  <p><b>Photographs</b> (Wikimedia Commons, used under their licences):</p>
+  <p><b>Board 1 — Hardware.</b> Photos marked "Survey photo" were taken by us during the market survey (local hardware store and brand studios). Other hardware photos, from Wikimedia Commons under their licences:</p>
+  <ul>
+    <li>Closet Door Hinge, Soft-Close (46195408205) — Tony Webster from Minneapolis, Minnesota, United States, CC BY 2.0 — <a href="https://commons.wikimedia.org/wiki/File:Closet_Door_Hinge,_Soft-Close_(46195408205).jpg">source</a></li>
+    <li>Klavierband 02 (fcm) — Photograph: Frank C. Müller, Baden-Baden, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Klavierband_02_(fcm).jpg">source</a></li>
+    <li>Bản lề sàn lawrence lh1024 — Phaptran, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:B%E1%BA%A3n_l%E1%BB%81_s%C3%A0n_lawrence_lh1024.jpg">source</a></li>
+    <li>Bản lề phòng tắm kính lawrence — Phaptran, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:B%E1%BA%A3n_l%E1%BB%81_ph%C3%B2ng_t%E1%BA%AFm_k%C3%ADnh_lawrence.jpg">source</a></li>
+    <li>Hinge on kitchen cabinet with soft closing mechanism — Shixart1985, CC BY 2.0 — <a href="https://commons.wikimedia.org/wiki/File:Hinge_on_kitchen_cabinet_with_soft_closing_mechanism.jpg">source</a></li>
+    <li>Дверной глазок. Фото А. Щекинова — Schekinov Alexey Victorovich, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:%D0%94%D0%B2%D0%B5%D1%80%D0%BD%D0%BE%D0%B9_%D0%B3%D0%BB%D0%B0%D0%B7%D0%BE%D0%BA._%D0%A4%D0%BE%D1%82%D0%BE_%D0%90._%D0%A9%D0%B5%D0%BA%D0%B8%D0%BD%D0%BE%D0%B2%D0%B0.jpg">source</a></li>
+    <li>Door chain — Santeri Viinamäki, CC BY 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Door_chain.JPG">source</a></li>
+    <li>Kwikset 270 CNT Electronic Deadbolt Lock — TaurusEmerald, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Kwikset_270_CNT_Electronic_Deadbolt_Lock.jpg">source</a></li>
+    <li>Burgwaechter Schloss mit Schluessel — Sebastian Hartlaub, CC BY-SA 2.5 — <a href="https://commons.wikimedia.org/wiki/File:Burgwaechter_Schloss_mit_Schluessel.JPG">source</a></li>
+    <li>Rim lock — aboespfl, CC0 — <a href="https://commons.wikimedia.org/wiki/File:Rim_lock.jpg">source</a></li>
+    <li>Desk Wafer Tumbler Lock — Willh26, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Desk_Wafer_Tumbler_Lock.jpg">source</a></li>
+    <li>Base Cabinet Pull-out — Stilfehler, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Base_Cabinet_Pull-out.jpg">source</a></li>
+    <li>Sektion Corner Cabinet Pull-out Stage 2 — Stilfehler, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Sektion_Corner_Cabinet_Pull-out_Stage_2.jpg">source</a></li>
+    <li>Blue Sliding Door (Closeup) — Dmitri Popov, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:Blue_Sliding_Door_(Closeup).jpg">source</a></li>
+    <li>MEC Glazing — Ding YangYang, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:MEC_Glazing.JPG">source</a></li>
+    <li>Door knob — rrafson, CC BY-SA 3.0 — <a href="https://commons.wikimedia.org/wiki/File:Door_knob.jpg">source</a></li>
+    <li>Close-up of a door knob and locking mechanism — Shixart1985, CC BY 2.0 — <a href="https://commons.wikimedia.org/wiki/File:Close-up_of_a_door_knob_and_locking_mechanism.jpg">source</a></li>
+  </ul>
+  <p><b>Hardware facts</b> are from BIS standards lists (services.bis.gov.in), manufacturer pages (Hettich, Häfele, Blum, Ebco, Godrej, dormakaba, Dorset), EN 1154 summaries (Union, Safelincs), ASSDA / Aalco (stainless grades), Hager / ASSA ABLOY (hinge counts) and online price listings (Moglix, McCoy Mart, IndiaMART, Nov 2026 — indicative). Full list with links: tools/hw/research.md.</p>
+  <p><b>Room photo</b>: generated locally with ComfyUI (RealVisXL) from our own layout sketch.</p>
+  <p><b>Board 2 — uPVC.</b> Photographs (Wikimedia Commons, used under their licences):</p>
   <ul>
     <li>Pondicherry uPVC window — iMahesh, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Windows_of_Pondicherry_-_Orange_wall,_UPVC_window_and_Golden_grill.jpg">source</a></li>
     <li>Double hung window — Tucker T, CC0 — <a href="https://commons.wikimedia.org/wiki/File:Double_hung_window.jpeg">source</a></li>
@@ -852,7 +1307,6 @@ html,body{background:#8f8c86}
     <li>Fenstergriff Tensolock F 04 — Sandra Hässig, CC BY-SA 4.0 — <a href="https://commons.wikimedia.org/wiki/File:Fenstergriff_Tensolock_F_04.jpg">source</a></li>
   </ul>
   <p><b>Drawings</b>: schematic diagrams drawn for this presentation (not to scale).</p>
-  <p><b>Brick wall texture</b>: “Bricks101” from <a href="https://ambientcg.com/view?id=Bricks101">ambientCG</a>, CC0.</p>
   <p><b>Reading / sources</b>:</p>
   <ul>
     <li>Liniar — multi-chambered profiles: <a href="https://www.liniar.co.uk/articles/multi-chambered-profiles-the-science-bit">liniar.co.uk</a></li>
@@ -941,91 +1395,105 @@ function label(g,x,y,t,s){el('text',{x,y,'text-anchor':'middle',class:'lbl',styl
 })();
 
 
-
-/* ================= WALL + BOARD LOGIC ================= */
+/* ================= WALL + BOARDS LOGIC =================
+   Boards are presented in DOM order of .frame elements (hardware first, then uPVC).
+   Each .cluster has data-board="<frame id>" and data-step (1 = that board's title cluster). */
 const world=document.getElementById('world'),vp=document.getElementById('viewport'),hint=document.getElementById('hint');
-const clusters=[...document.querySelectorAll('.cluster')].sort((a,b)=>a.dataset.step-b.dataset.step);
-const WALL={x:-12950,y:-5950,w:27900,h:15900}, BOARD={x:-760,y:-1050,w:9120,h:5560};
-let phase='wall', zoomedOn=null, lockUntil=0;
-const svg=document.getElementById('strings'),pinsvg=document.getElementById('pins');
+const WALL={x:-12950,y:-5950,w:27900,h:15900};
 const NSs='http://www.w3.org/2000/svg';
+const boards=[...document.querySelectorAll('.frame')].map(el=>{
+  const box={x:el.offsetLeft-20,y:el.offsetTop-(+el.dataset.lamp||0)-20,w:el.offsetWidth+40,h:el.offsetHeight+(+el.dataset.lamp||0)+40};
+  const cl=[...document.querySelectorAll('.cluster[data-board="'+el.id+'"]')].sort((a,b)=>a.dataset.step-b.dataset.step);
+  return{el,id:el.id,name:el.dataset.name,box,clusters:cl,hero:cl[0],
+    strings:document.getElementById('strings-'+el.id),pins:document.getElementById('pins-'+el.id)};
+});
+const clusters=boards.flatMap(b=>b.clusters);
+const boardOf=c=>boards.find(b=>b.clusters.includes(c));
+let phase='wall', cur=boards[0], zoomedOn=null, lockUntil=0;
+
 function mk(tag,a,p){const e=document.createElementNS(NSs,tag);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e}
 function itemBox(it){const c=it.parentElement;return{x:c.offsetLeft+it.offsetLeft,y:c.offsetTop+it.offsetTop,w:it.offsetWidth,h:it.offsetHeight}}
 function clusterBox(c){let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;c.querySelectorAll('.item').forEach(it=>{const b=itemBox(it);x1=Math.min(x1,b.x);y1=Math.min(y1,b.y);x2=Math.max(x2,b.x+b.w);y2=Math.max(y2,b.y+b.h)});return{x:x1,y:y1,w:x2-x1,h:y2-y1}}
 function fit(b,pad=60,cover){const vw=vp.clientWidth,vh=vp.clientHeight-46;const s=Math[cover?'max':'min'](vw/(b.w+pad*2),vh/(b.h+pad*2));
   world.style.transform=`translate(${vw/2-(b.x+b.w/2)*s}px,${vh/2-(b.y+b.h/2)*s}px) scale(${s})`;lockUntil=Date.now()+1300}
 function setHint(t){hint.textContent=t;hint.style.opacity=t?1:0}
+const shown=c=>c.classList.contains('shown');
 function setPhase(p,target){phase=p;zoomedOn=target||null;document.body.classList.toggle('inboard',p!=='wall');document.body.classList.toggle('zoomed',p==='zone'||p==='item');
-  const n=clusters.filter(c=>c.classList.contains('shown')).length;
-  document.getElementById('ht').textContent=p==='wall'?'The wall':p==='board'?'The board':(target&&target.dataset?target.dataset.name:'')||'';
-  document.getElementById('hc').textContent=`${n} / ${clusters.length} revealed`;
-  document.getElementById('bar').style.width=(n/clusters.length*100)+'%';
-  setHint(p==='wall'?'hover over the board to begin':p==='board'?(n<clusters.length?'hover over a topic to reveal it · click to zoom in':'all evidence on the board · click any card'):'click a card to read it · → next · Esc back to the board');}
+  const cl=cur.clusters,n=cl.filter(shown).length,all=clusters.filter(shown).length;
+  document.getElementById('ht').textContent=p==='wall'?'The wall':p==='board'?cur.name:(target&&target.dataset?target.dataset.name:'')||'';
+  document.getElementById('hc').textContent=p==='wall'?`${boards.length} boards`:`${n} / ${cl.length} revealed`;
+  document.getElementById('bar').style.width=(all/clusters.length*100)+'%';
+  const nb=boards[boards.indexOf(cur)+1];
+  setHint(p==='wall'?'hover over a board to begin':p==='board'?(n<cl.length?'hover over a topic to reveal it · click to zoom in':(nb?'all evidence on this board · → next board':'all evidence on the board · click any card')):'click a card to read it · → next · Esc back to the board');}
 
 /* zones */
 const zones=new Map();
 clusters.forEach(c=>{
-  const b=clusterBox(c),pad=30;const z=document.createElement('div');z.className='zone'+(c.dataset.step==='1'?' big':'');
+  const b=clusterBox(c),pad=30,hero=c===boardOf(c).hero;const z=document.createElement('div');z.className='zone'+(hero?' big':'');
   Object.assign(z.style,{left:(b.x-pad)+'px',top:(b.y-pad)+'px',width:(b.w+pad*2)+'px',height:(b.h+pad*2)+'px'});
   const [no,...rest]=c.dataset.name.split(' · ');const title=rest.length?rest.join(' · '):no;
   z.innerHTML='<svg><rect x="0" y="0" width="100%" height="100%" rx="40"/></svg><div class="zt">'+
-    (c.dataset.step==='1'?'<b>case file no. 09</b><span>uPVC WINDOWS<br>&amp; DOORS</span>':'<b>'+(rest.length?no:'✓')+'</b><span>'+title+'</span><em>hover to reveal</em>')+'</div>';
+    (hero?'<b>'+c.dataset.kicker+'</b><span>'+c.dataset.big+'</span>':'<b>'+(rest.length?no:'✓')+'</b><span>'+title+'</span><em>hover to reveal</em>')+'</div>';
   world.appendChild(z);zones.set(c,z);
-  z.addEventListener('mouseenter',()=>{if(phase==='wall'){enterBoard();return}if(Date.now()<lockUntil)return;reveal(c)});
-  z.addEventListener('click',e=>{e.stopPropagation();if(phase==='wall'){enterBoard();return}reveal(c);zoomZone(c)});
-  [...c.querySelectorAll('.item')].forEach((it,i)=>it.style.setProperty('--d',(i*0.22)+'s'));
+  z.addEventListener('mouseenter',()=>{const bd=boardOf(c);if(phase==='wall'||bd!==cur){if(phase==='wall')enterBoard(bd);return}if(Date.now()<lockUntil)return;reveal(c)});
+  z.addEventListener('click',e=>{e.stopPropagation();const bd=boardOf(c);if(phase==='wall'||bd!==cur){enterBoard(bd);return}reveal(c);zoomZone(c)});
 });
 
-/* marker arrows + magnets */
-const arrows=new Map();
+/* strings + pins */
 function buildMarks(){
-  svg.innerHTML='';pinsvg.innerHTML='';
-  const title=document.getElementById('title');
-  const pinPos=it=>{const b=itemBox(it);return[b.x+b.w/2,b.y+16]};
-  const thread=(c,A,B,cls,delay)=>{const[p1,p2]=[pinPos(A),pinPos(B)];const d=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);
-    const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2+d*0.07;const dd='M'+p1[0]+','+p1[1]+' Q'+mx+','+my+' '+p2[0]+','+p2[1];
-    const g=mk('g',{class:'thread '+cls},svg);g.style.setProperty('--d',delay+'s');
-    mk('path',{d:dd,class:'sh',transform:'translate(3 7)'},g);const p=mk('path',{d:dd,class:'st'},g);
-    const len=p.getTotalLength();g.querySelectorAll('path').forEach(q=>{q.style.strokeDasharray=len;q.style.setProperty('--len',len)});
-    (c._threads=c._threads||[]).push(g);};
-  clusters.forEach(c=>{const items=[...c.querySelectorAll('.item')];const step=c.dataset.step;
-    items.forEach((it,i)=>it.style.setProperty('--d',(i*0.22)+'s'));
-    if(step==='1'){items.filter(i=>i!==title).forEach((it,i)=>thread(c,title,it,'thin',0.4+i*0.22));}
-    else{const head=c.querySelector('.head')||items[0];thread(c,title,head,'thick',0);
-      items.filter(i=>i!==head).forEach(it=>thread(c,head,it,'thin',parseFloat(it.style.getPropertyValue('--d'))+0.25));}
-    const cols=['#d62828','#f4a261','#2a9d8f','#e9c46a','#457b9d','#ffffff'];
-    items.forEach((it,i)=>{const[x,y]=pinPos(it);const g=mk('g',{class:'pin'},pinsvg);g.style.setProperty('--d',(i*0.22+0.2)+'s');
-      const col=cols[(i*2+ +step)%cols.length];
-      mk('circle',{cx:x+3,cy:y+5,r:11,fill:'rgba(0,0,0,.35)'},g);mk('circle',{cx:x,cy:y,r:11,fill:col,stroke:'rgba(0,0,0,.35)'},g);
-      mk('circle',{cx:x-3.5,cy:y-3.5,r:3.5,fill:'rgba(255,255,255,.75)'},g);
-      (c._pins=c._pins||[]).push(g);});
+  boards.forEach(bd=>{bd.strings.innerHTML='';bd.pins.innerHTML='';
+    const title=bd.hero.querySelector('.title');
+    const pinPos=it=>{const b=itemBox(it);return[b.x+b.w/2,b.y+16]};
+    const thread=(c,A,B,cls,delay)=>{const[p1,p2]=[pinPos(A),pinPos(B)];const d=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);
+      const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2+d*0.07;const dd='M'+p1[0]+','+p1[1]+' Q'+mx+','+my+' '+p2[0]+','+p2[1];
+      const g=mk('g',{class:'thread '+cls},bd.strings);g.style.setProperty('--d',delay+'s');
+      mk('path',{d:dd,class:'sh',transform:'translate(3 7)'},g);const p=mk('path',{d:dd,class:'st'},g);
+      const len=p.getTotalLength();g.querySelectorAll('path').forEach(q=>{q.style.strokeDasharray=len;q.style.setProperty('--len',len)});
+      (c._threads=c._threads||[]).push(g);};
+    bd.clusters.forEach(c=>{const items=[...c.querySelectorAll('.item')];const step=+c.dataset.step;
+      items.forEach((it,i)=>it.style.setProperty('--d',(i*0.22)+'s'));
+      if(c===bd.hero){items.filter(i=>i!==title).forEach((it,i)=>thread(c,title,it,'thin',0.4+i*0.22));}
+      else{const head=c.querySelector('.head')||items[0];thread(c,title,head,'thick',0);
+        items.filter(i=>i!==head).forEach(it=>thread(c,head,it,'thin',parseFloat(it.style.getPropertyValue('--d'))+0.25));}
+      const cols=['#d62828','#f4a261','#2a9d8f','#e9c46a','#457b9d','#ffffff'];
+      items.forEach((it,i)=>{const[x,y]=pinPos(it);const g=mk('g',{class:'pin'},bd.pins);g.style.setProperty('--d',(i*0.22+0.2)+'s');
+        const col=cols[(i*2+step)%cols.length];
+        mk('circle',{cx:x+3,cy:y+5,r:11,fill:'rgba(0,0,0,.35)'},g);mk('circle',{cx:x,cy:y,r:11,fill:col,stroke:'rgba(0,0,0,.35)'},g);
+        mk('circle',{cx:x-3.5,cy:y-3.5,r:3.5,fill:'rgba(255,255,255,.75)'},g);
+        (c._pins=c._pins||[]).push(g);});
+    });
   });
 }
-function reveal(c){if(c.classList.contains('shown'))return;c.classList.add('shown');zones.get(c).classList.add('gone');
+function reveal(c){if(shown(c))return;c.classList.add('shown');zones.get(c).classList.add('gone');
   (c._pins||[]).forEach(p=>p.classList.add('on'));(c._threads||[]).forEach(t=>t.classList.add('on'));
-  const s1=clusters[0];if(c!==s1&&!s1.classList.contains('shown'))reveal(s1);
+  const h=boardOf(c).hero;if(c!==h&&!shown(h))reveal(h);
   setPhase(phase,zoomedOn);}
-function enterBoard(){fit(BOARD,20);setPhase('board');setTimeout(()=>reveal(clusters[0]),900)}
+function showBoard(bd){cur=bd;fit(bd.box,20);setPhase('board')}
+function enterBoard(bd){showBoard(bd);setTimeout(()=>reveal(bd.hero),900)}
 function toWall(){fit(WALL,0,1);setPhase('wall')}
-function zoomZone(c){reveal(c);fit(clusterBox(c),70);setPhase('zone',c)}
-function zoomItem(it){fit(itemBox(it),40);setPhase('item',it)}
+function zoomZone(c){cur=boardOf(c);reveal(c);fit(clusterBox(c),70);setPhase('zone',c)}
+function zoomItem(it){cur=boardOf(it.parentElement);fit(itemBox(it),40);setPhase('item',it)}
 
-document.getElementById('board').addEventListener('mouseenter',()=>{if(phase==='wall')enterBoard()});
+boards.forEach(bd=>bd.el.addEventListener('mouseenter',()=>{if(phase==='wall')enterBoard(bd)}));
 document.querySelectorAll('.cluster .item').forEach(it=>it.addEventListener('click',e=>{e.stopPropagation();
+  if(phase==='wall'){enterBoard(boardOf(it.parentElement));return}
   if(phase==='item'&&zoomedOn===it){zoomZone(it.parentElement);return}zoomItem(it)}));
-vp.addEventListener('click',()=>{if(phase==='zone'||phase==='item')back();else if(phase==='wall')enterBoard()});
-function back(){if(phase==='item')zoomZone(zoomedOn.parentElement);else if(phase==='zone'){fit(BOARD,20);setPhase('board')}else if(phase==='board')toWall()}
-function next(){if(phase==='wall'){enterBoard();return}
-  const cur=phase==='zone'?zoomedOn:phase==='item'?zoomedOn.parentElement:null;
-  const nxt=clusters.find(c=>!c.classList.contains('shown')&&c.dataset.step!=='1')||(cur?clusters[clusters.indexOf(cur)+1]:null);
-  if(nxt)zoomZone(nxt);else{fit(BOARD,20);setPhase('board')}}
+vp.addEventListener('click',()=>{if(phase==='zone'||phase==='item')back();else if(phase==='wall')enterBoard(boards[0])});
+function back(){if(phase==='item')zoomZone(zoomedOn.parentElement);else if(phase==='zone')showBoard(cur);else if(phase==='board')toWall()}
+function next(){if(phase==='wall'){enterBoard(boards[0]);return}
+  const c=phase==='zone'?zoomedOn:phase==='item'?zoomedOn.parentElement:null;
+  const todo=cur.clusters.find(x=>!shown(x)&&x!==cur.hero);
+  if(todo){zoomZone(todo);return}
+  if(c){const i=cur.clusters.indexOf(c);if(i>0&&i<cur.clusters.length-1){zoomZone(cur.clusters[i+1]);return}showBoard(cur);return}
+  const nb=boards[boards.indexOf(cur)+1];if(nb)enterBoard(nb);else showBoard(cur)}
 document.addEventListener('keydown',e=>{
   const cr=document.getElementById('credits');if(cr.classList.contains('on')){if(['Escape','c','C'].includes(e.key))cr.classList.remove('on');return}
   if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next()}
   else if(['ArrowLeft','PageUp','Backspace','Escape'].includes(e.key)){e.preventDefault();back()}
   else if(e.key==='w'||e.key==='W'||e.key==='Home')toWall();
-  else if(e.key==='b'||e.key==='B'||e.key==='o'||e.key==='O'){fit(BOARD,20);setPhase('board')}
-  else if(e.key==='a'||e.key==='A'){clusters.forEach(reveal);fit(BOARD,20);setPhase('board')}
+  else if(e.key==='b'||e.key==='B'||e.key==='o'||e.key==='O')showBoard(cur);
+  else if(/^[1-9]$/.test(e.key)&&boards[+e.key-1])enterBoard(boards[+e.key-1]);
+  else if(e.key==='a'||e.key==='A'){cur.clusters.forEach(reveal);showBoard(cur)}
   else if(e.key==='r'||e.key==='R')location.reload();
   else if(e.key==='c'||e.key==='C')cr.classList.add('on');
   else if(e.key==='h'||e.key==='H')document.body.classList.toggle('clean');
@@ -1033,13 +1501,13 @@ document.addEventListener('keydown',e=>{
 document.getElementById('next').onclick=e=>{e.stopPropagation();next()};
 document.getElementById('prev').onclick=e=>{e.stopPropagation();back()};
 document.getElementById('cbtn').onclick=e=>{e.stopPropagation();document.getElementById('credits').classList.add('on')};
-window.addEventListener('resize',()=>{if(phase==='wall')fit(WALL,0,1);else if(phase==='board')fit(BOARD,20);else if(phase==='zone')fit(clusterBox(zoomedOn),70);else fit(itemBox(zoomedOn),40)});
+window.addEventListener('resize',()=>{if(phase==='wall')fit(WALL,0,1);else if(phase==='board')fit(cur.box,20);else if(phase==='zone')fit(clusterBox(zoomedOn),70);else fit(itemBox(zoomedOn),40)});
 window.addEventListener('load',()=>{buildMarks();const q=new URLSearchParams(location.search);
   if(q.has('still'))document.body.classList.add('still');
-  const v=q.get('view');
-  if(v==='board'){fit(BOARD,20);setPhase('board');reveal(clusters[0])}
-  else if(v==='all'){clusters.forEach(reveal);fit(BOARD,20);setPhase('board')}
-  else if(v&&v.startsWith('zone')){zoomZone(clusters[+v.slice(4)-1])}
+  const v=q.get('view'),bd=boards[(+q.get('b')||1)-1]||boards[0];
+  if(v==='board'){cur=bd;reveal(bd.hero);showBoard(bd)}
+  else if(v==='all'){cur=bd;bd.clusters.forEach(reveal);showBoard(bd)}
+  else if(v&&v.startsWith('zone')){zoomZone(bd.clusters[+v.slice(4)-1])}
   else toWall();});
 
 </script>

@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- Line guide v2 (two boards). 1344x768 = bake region S (x -13000..15000, y -6000..10000), 0.048 px per world unit.
+     px = (x+13000)*0.048, py = (y+6000)*0.048
+     hardware frame (square): x -8420..-1980, y -2120..4320  -> px 220..554, py 186..495
+     uPVC frame:              x  -720..8320,  y  -720..4320  -> px 589..1023, py 253..495
+     window (right):          x  9400..12700, y -1000..3600  -> px 1075..1234, py 240..461 -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}svg{display:block}</style></head><body>
+<svg width="1344" height="768" viewBox="0 0 1344 768" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round">
+  <!-- ceiling junction, conduit, floor, skirting, column on far right -->
+  <path d="M0 115 H1344"/><path d="M0 60 H1344 M0 66 H1344"/><path d="M0 128 H1344"/>
+  <path d="M0 653 H1344"/><path d="M0 643 H1344"/>
+  <path d="M1265 128 V653 M1271 128 V653"/>
+  <!-- hardware frame (square) + mat + LED bar -->
+  <rect x="220" y="186" width="334" height="309"/><rect x="227" y="193" width="320" height="295"/>
+  <rect x="244" y="162" width="286" height="9"/><path d="M382 171 V186 M392 171 V186"/>
+  <!-- uPVC frame + mat + LED bar -->
+  <rect x="589" y="253" width="434" height="242"/><rect x="596" y="260" width="420" height="228"/>
+  <rect x="613" y="228" width="307" height="9"/><path d="M763 237 V253 M773 237 V253"/>
+  <!-- white uPVC casement window on the right -->
+  <rect x="1075" y="240" width="159" height="221"/><rect x="1084" y="249" width="141" height="203"/>
+  <path d="M1084 294 H1225 M1154 294 V452"/>
+  <rect x="1092" y="302" width="56" height="142"/><rect x="1160" y="302" width="56" height="142"/>
+  <rect x="1092" y="256" width="124" height="32"/>
+  <path d="M1067 461 H1242 V469 H1067 Z"/>
+  <!-- low sofa under the uPVC frame -->
+  <path d="M640 540 Q640 528 652 528 H962 Q974 528 974 540 V600 H640 Z"/>
+  <path d="M630 575 Q630 565 640 565 H974 Q984 565 984 575 V640 H630 Z"/>
+  <path d="M640 600 H974"/><path d="M745 540 V600 M865 540 V600"/><path d="M640 640 V650 M974 640 V650"/>
+  <path d="M655 555 Q690 535 735 552 M760 555 Q800 535 850 552 M875 555 Q915 535 958 552"/>
+  <!-- rug + travertine cube table -->
+  <path d="M560 660 H1060 L1150 768 H470 Z"/><path d="M575 666 H1045 L1124 762 H496 Z"/>
+  <path d="M752 690 H904 V748 H752 Z"/><path d="M752 690 L768 676 H920 L904 690 M920 676 V734 L904 748"/>
+  <!-- low wooden sideboard under the hardware frame, with a vase and books -->
+  <rect x="245" y="560" width="290" height="80"/><path d="M245 572 H535 M342 572 V640 M438 572 V640"/>
+  <path d="M255 640 V651 M525 640 V651"/>
+  <path d="M290 560 V528 Q290 518 298 516 Q306 518 306 528 V560"/>
+  <path d="M470 560 H520 V550 H470 Z M474 550 H516 V542 H474 Z"/>
+  <!-- tall plant far left -->
+  <path d="M80 590 H150 L144 652 H86 Z"/>
+  <path d="M115 590 C95 520 60 470 50 420 M115 590 C117 500 105 440 112 370 M115 590 C140 520 165 480 180 430 M115 590 C130 540 150 500 140 460"/>
+  <!-- small plant between sofa and window wall -->
+  <path d="M1050 600 H1094 L1090 650 H1054 Z"/>
+  <path d="M1072 600 C1050 565 1035 545 1032 520 M1072 600 C1076 560 1066 530 1074 500 M1072 600 C1098 575 1112 552 1110 528"/>
+  <!-- black industrial pendant lamps, clear of both frames -->
+  <path d="M150 0 V120"/><path d="M118 142 Q150 110 182 142 Z"/>
+  <path d="M572 0 V70"/><path d="M550 86 Q572 62 594 86 Z"/>
+  <path d="M1180 0 V95"/><path d="M1140 122 Q1180 82 1220 122 Z"/>
+</svg></body></html>
