@@ -261,7 +261,10 @@ html,body{background:#8f8c86}
 .frame{background:transparent!important;box-shadow:none!important}
 .frame::before{display:none!important}
 .frame .face,.scene{display:none!important}
-#sceneimg{position:absolute;left:-13000px;top:-6000px;width:28000px;height:16000px;z-index:-2;pointer-events:none;user-select:none}
+/* anti-flicker: the room photo is its own GPU texture (scaled, never re-painted, during camera moves);
+   without this the browser re-rasterised it in tiles at every zoom step and unfinished tiles flashed */
+#sceneimg{position:absolute;left:-13000px;top:-6000px;width:28000px;height:16000px;z-index:-2;pointer-events:none;user-select:none;will-change:transform;backface-visibility:hidden}
+.glass{will-change:opacity}
 </style>
 </head>
 <body>
