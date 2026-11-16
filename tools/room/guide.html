@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- Line guide for ControlNet. 1344x768 = bake region S (x -13000..15000, y -6000..10000), 0.048 px per world unit.
+     px = (x+13000)*0.048, py = (y+6000)*0.048 -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}svg{display:block}</style></head><body>
+<svg width="1344" height="768" viewBox="0 0 1344 768" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round">
+  <!-- ceiling / wall junction (y -3600) and floor line (y 7600) -->
+  <path d="M0 115 H1344"/>
+  <path d="M0 653 H1344"/>
+  <!-- ceiling perspective seams toward the viewer -->
+
+  <!-- exposed conduit along the ceiling and down the wall corner -->
+  <path d="M0 60 H1344 M0 66 H1344"/>
+  <path d="M0 128 H1344"/>
+  <path d="M1250 128 V653 M1256 128 V653"/>
+  <!-- skirting -->
+  <path d="M0 643 H1344"/>
+  <!-- picture frame (x -720..8320, y -720..4320) + inner mat -->
+  <rect x="589" y="253" width="434" height="242"/>
+  <rect x="596" y="260" width="420" height="228"/>
+  <!-- LED picture light bar -->
+  <rect x="613" y="228" width="307" height="9"/><path d="M763 237 V253 M773 237 V253"/>
+  <!-- uPVC casement window (x -8000..-2600, y -1400..4100) -->
+  <rect x="240" y="221" width="259" height="264"/>
+  <rect x="251" y="232" width="237" height="242"/>
+  <path d="M251 290 H488 M369 290 V474"/>
+  <rect x="262" y="300" width="98" height="164"/><rect x="379" y="300" width="98" height="164"/>
+  <rect x="262" y="241" width="215" height="42"/>
+  <path d="M232 485 H507 V493 H232 Z"/>
+  <!-- low sofa under the frame (x 300..7300) -->
+  <path d="M640 540 Q640 528 652 528 H962 Q974 528 974 540 V600 H640 Z"/>
+  <path d="M630 575 Q630 565 640 565 H974 Q984 565 984 575 V640 H630 Z"/>
+  <path d="M640 600 H974"/><path d="M745 540 V600 M865 540 V600"/>
+  <path d="M640 640 V650 M974 640 V650"/>
+  <!-- cushions -->
+  <path d="M655 555 Q690 535 735 552 M760 555 Q800 535 850 552 M875 555 Q915 535 958 552"/>
+  <!-- rug on the floor in front -->
+  <path d="M560 660 H1060 L1150 768 H470 Z"/>
+  <path d="M575 666 H1045 L1124 762 H496 Z"/>
+  <!-- travertine cube coffee table -->
+  <path d="M752 690 H904 V748 H752 Z"/><path d="M752 690 L768 676 H920 L904 690 M920 676 V734 L904 748"/>
+  <!-- plant on stool, left of sofa -->
+  <path d="M548 600 H592 L588 650 H552 Z"/>
+  <path d="M570 600 C540 560 520 540 515 515 M570 600 C575 555 560 520 570 500 M570 600 C600 570 615 545 612 520"/>
+  <!-- tall bird-of-paradise plant right of sofa -->
+  <path d="M1070 590 H1130 L1124 652 H1076 Z"/>
+  <path d="M1100 590 C1080 530 1050 480 1045 430 M1100 590 C1102 500 1095 440 1100 380 M1100 590 C1125 520 1140 480 1150 430 M1100 590 C1115 540 1125 500 1120 460"/>
+  <!-- leaning floor mirror, far right -->
+  <path d="M1170 650 L1182 360 H1240 L1238 652 Z"/>
+  <!-- stack of magazines -->
+  <path d="M1000 625 H1040 V652 H1000 Z M1000 632 H1040 M1000 640 H1040"/>
+  <!-- black industrial pendant lamps (clear of the frame) -->
+  <path d="M150 0 V150"/><path d="M118 172 Q150 140 182 172 Z"/>
+  <path d="M1180 0 V95"/><path d="M1140 122 Q1180 82 1220 122 Z"/>
+  <path d="M420 0 V60"/><path d="M398 76 Q420 52 442 76 Z"/>
+</svg></body></html>
